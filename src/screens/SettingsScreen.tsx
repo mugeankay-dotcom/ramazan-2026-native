@@ -26,23 +26,66 @@ export default function SettingsScreen({ navigation }: any) {
         vibrationEnabled,
         setVibrationEnabled,
         calculationMethod,
-        setCalculationMethod
+        setCalculationMethod,
+        asrSchool,
+        setAsrSchool,
+        highLatitudeMethod,
+        setHighLatitudeMethod,
+        midnightMode,
+        setMidnightMode
     } = useApp();
 
     const currentLangName = supportedLanguages.find(l => l.code === language)?.name || 'Türkçe';
 
     const CALCULATION_METHODS = [
-        { id: '13', label: t('methods.13') },
-        { id: '3', label: t('methods.3') },
-        { id: '2', label: t('methods.2') },
-        { id: '5', label: t('methods.5') },
-        { id: '4', label: t('methods.4') }
+        { id: '13', label: t('methods.13'), region: 'turkey' },
+        { id: '3', label: t('methods.3'), region: 'global' },
+        { id: '2', label: t('methods.2'), region: 'america' },
+        { id: '5', label: t('methods.5'), region: 'africa' },
+        { id: '4', label: t('methods.4'), region: 'gulf' },
+        { id: '1', label: t('methods.1'), region: 'pakistan' },
+        { id: '7', label: t('methods.7'), region: 'iran' },
+        { id: '8', label: t('methods.8'), region: 'gulf' },
+        { id: '9', label: t('methods.9'), region: 'gulf' },
+        { id: '10', label: t('methods.10'), region: 'gulf' },
+        { id: '11', label: t('methods.11'), region: 'asia' },
+        { id: '12', label: t('methods.12'), region: 'europe' },
+        { id: '14', label: t('methods.14'), region: 'europe' },
+        { id: '17', label: t('methods.17'), region: 'asia' },
+        { id: '20', label: t('methods.20'), region: 'asia' },
+        { id: '0', label: t('methods.0'), region: 'shia' }
     ];
 
     const currentMethodLabel = CALCULATION_METHODS.find(m => m.id === calculationMethod)?.label || t('methods.13');
 
+    // Asr Okulu (Hanefi/Şafi)
+    const ASR_SCHOOLS = [
+        { id: '1', label: t('schools.hanafi') },
+        { id: '0', label: t('schools.shafi') }
+    ];
+    const currentAsrSchoolLabel = ASR_SCHOOLS.find(s => s.id === asrSchool)?.label || t('schools.hanafi');
+
+    // Yüksek Enlem Metodu
+    const HIGH_LAT_METHODS = [
+        { id: '0', label: t('highLat.auto') },
+        { id: '1', label: t('highLat.middleNight') },
+        { id: '2', label: t('highLat.oneSeventh') },
+        { id: '3', label: t('highLat.angleBased') }
+    ];
+    const currentHighLatLabel = HIGH_LAT_METHODS.find(m => m.id === highLatitudeMethod)?.label || t('highLat.auto');
+
+    // Midnight Modu
+    const MIDNIGHT_MODES = [
+        { id: '0', label: t('midnight.standard') },
+        { id: '1', label: t('midnight.jafari') }
+    ];
+    const currentMidnightLabel = MIDNIGHT_MODES.find(m => m.id === midnightMode)?.label || t('midnight.standard');
+
     const [showLocationResetModal, setShowLocationResetModal] = React.useState(false);
     const [showMethodModal, setShowMethodModal] = React.useState(false);
+    const [showAsrSchoolModal, setShowAsrSchoolModal] = React.useState(false);
+    const [showHighLatModal, setShowHighLatModal] = React.useState(false);
+    const [showMidnightModal, setShowMidnightModal] = React.useState(false);
     const [showMenu, setShowMenu] = React.useState(false);
     // const { prayerOffsets, setPrayerOffset } = useApp(); // Not needed anymore
 
@@ -108,6 +151,51 @@ export default function SettingsScreen({ navigation }: any) {
                         onPress={() => setShowMethodModal(true)}
                     >
                         <Text style={styles.methodText} numberOfLines={1}>{currentMethodLabel}</Text>
+                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Asr School Selector (Hanefi/Şafi) */}
+                <View style={styles.settingItem}>
+                    <View style={styles.settingInfo}>
+                        <Text style={styles.settingLabel}>{t('asrSchoolLabel')}</Text>
+                        <Text style={styles.settingDesc}>{t('asrSchoolDesc')}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.methodSelector}
+                        onPress={() => setShowAsrSchoolModal(true)}
+                    >
+                        <Text style={styles.methodText} numberOfLines={1}>{currentAsrSchoolLabel}</Text>
+                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* High Latitude Method Selector */}
+                <View style={styles.settingItem}>
+                    <View style={styles.settingInfo}>
+                        <Text style={styles.settingLabel}>{t('highLatLabel')}</Text>
+                        <Text style={styles.settingDesc}>{t('highLatDesc')}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.methodSelector}
+                        onPress={() => setShowHighLatModal(true)}
+                    >
+                        <Text style={styles.methodText} numberOfLines={1}>{currentHighLatLabel}</Text>
+                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                    </TouchableOpacity>
+                </View>
+
+                {/* Midnight Mode Selector */}
+                <View style={styles.settingItem}>
+                    <View style={styles.settingInfo}>
+                        <Text style={styles.settingLabel}>{t('midnightLabel')}</Text>
+                        <Text style={styles.settingDesc}>{t('midnightDesc')}</Text>
+                    </View>
+                    <TouchableOpacity
+                        style={styles.methodSelector}
+                        onPress={() => setShowMidnightModal(true)}
+                    >
+                        <Text style={styles.methodText} numberOfLines={1}>{currentMidnightLabel}</Text>
                         <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
                     </TouchableOpacity>
                 </View>
@@ -267,6 +355,120 @@ export default function SettingsScreen({ navigation }: any) {
                                 <Text style={styles.modalBtnTextCancel}>{t('cancel')}</Text>
                             </TouchableOpacity>
                         </View>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Asr School Modal */}
+            <Modal visible={showAsrSchoolModal} transparent animationType="fade" onRequestClose={() => setShowAsrSchoolModal(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>{t('asrSchoolLabel')}</Text>
+                        <ScrollView style={{ maxHeight: 300, width: '100%' }}>
+                            {ASR_SCHOOLS.map((school) => (
+                                <TouchableOpacity
+                                    key={school.id}
+                                    style={[
+                                        styles.methodOption,
+                                        asrSchool === school.id && styles.methodOptionActive
+                                    ]}
+                                    onPress={() => {
+                                        setAsrSchool(school.id);
+                                        setShowAsrSchoolModal(false);
+                                        handleResetLocation();
+                                    }}
+                                >
+                                    <Text style={[
+                                        styles.methodOptionText,
+                                        asrSchool === school.id && styles.methodOptionTextActive
+                                    ]}>
+                                        {school.label}
+                                    </Text>
+                                    {asrSchool === school.id && (
+                                        <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                        <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setShowAsrSchoolModal(false)}>
+                            <Text style={styles.modalBtnTextCancel}>{t('cancel')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* High Latitude Method Modal */}
+            <Modal visible={showHighLatModal} transparent animationType="fade" onRequestClose={() => setShowHighLatModal(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>{t('highLatLabel')}</Text>
+                        <ScrollView style={{ maxHeight: 300, width: '100%' }}>
+                            {HIGH_LAT_METHODS.map((method) => (
+                                <TouchableOpacity
+                                    key={method.id}
+                                    style={[
+                                        styles.methodOption,
+                                        highLatitudeMethod === method.id && styles.methodOptionActive
+                                    ]}
+                                    onPress={() => {
+                                        setHighLatitudeMethod(method.id);
+                                        setShowHighLatModal(false);
+                                        handleResetLocation();
+                                    }}
+                                >
+                                    <Text style={[
+                                        styles.methodOptionText,
+                                        highLatitudeMethod === method.id && styles.methodOptionTextActive
+                                    ]}>
+                                        {method.label}
+                                    </Text>
+                                    {highLatitudeMethod === method.id && (
+                                        <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                        <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setShowHighLatModal(false)}>
+                            <Text style={styles.modalBtnTextCancel}>{t('cancel')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
+            {/* Midnight Mode Modal */}
+            <Modal visible={showMidnightModal} transparent animationType="fade" onRequestClose={() => setShowMidnightModal(false)}>
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>{t('midnightLabel')}</Text>
+                        <ScrollView style={{ maxHeight: 300, width: '100%' }}>
+                            {MIDNIGHT_MODES.map((mode) => (
+                                <TouchableOpacity
+                                    key={mode.id}
+                                    style={[
+                                        styles.methodOption,
+                                        midnightMode === mode.id && styles.methodOptionActive
+                                    ]}
+                                    onPress={() => {
+                                        setMidnightMode(mode.id);
+                                        setShowMidnightModal(false);
+                                        handleResetLocation();
+                                    }}
+                                >
+                                    <Text style={[
+                                        styles.methodOptionText,
+                                        midnightMode === mode.id && styles.methodOptionTextActive
+                                    ]}>
+                                        {mode.label}
+                                    </Text>
+                                    {midnightMode === mode.id && (
+                                        <Ionicons name="checkmark-circle" size={20} color={Colors.primary} />
+                                    )}
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                        <TouchableOpacity style={styles.modalBtnCancel} onPress={() => setShowMidnightModal(false)}>
+                            <Text style={styles.modalBtnTextCancel}>{t('cancel')}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </Modal>

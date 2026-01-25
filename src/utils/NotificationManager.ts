@@ -72,7 +72,8 @@ export async function scheduleNotificationAtTime(
     title: string,
     body: string,
     targetDate: Date,
-    identifier: string
+    identifier: string,
+    playSound: boolean = true
 ) {
     if (isExpoGo) {
         console.log(`[DEV] Would schedule notification: ${title} at ${targetDate.toLocaleTimeString()}`);
@@ -93,7 +94,7 @@ export async function scheduleNotificationAtTime(
             content: {
                 title: title,
                 body: body,
-                sound: true,
+                sound: playSound,
                 data: { type: 'prayer', identifier },
             },
             trigger: {
@@ -103,7 +104,7 @@ export async function scheduleNotificationAtTime(
             identifier: identifier,
         });
 
-        console.log(`✅ Scheduled: ${identifier} at ${targetDate.toLocaleTimeString()} (${triggerSeconds}s)`);
+        console.log(`✅ Scheduled: ${identifier} at ${targetDate.toLocaleTimeString()} (${triggerSeconds}s) sound:${playSound}`);
         return notificationId;
     } catch (error) {
         console.log('Schedule notification error:', error);
@@ -124,6 +125,7 @@ export async function scheduleDailyPrayerNotifications(
     },
     translations: {
         imsak: string;
+        fajr: string;
         sunrise: string;
         dhuhr: string;
         asr: string;
@@ -133,7 +135,9 @@ export async function scheduleDailyPrayerNotifications(
         alertBodyPrayer: string;
         alertBodyIftar: string;
         alertBodySahur: string;
-    }
+    },
+    isRamadan: boolean = false,  // Ramazan kontrolü
+    soundEnabled: boolean = true  // Ses kontrolü
 ) {
     if (isExpoGo) {
         console.log('[DEV] Would schedule daily prayer notifications');
@@ -155,14 +159,28 @@ export async function scheduleDailyPrayerNotifications(
     };
 
     // Prayer notifications to schedule
+    // İmsak bildirimi SADECE Ramazan'da aktif (sahur için)
+    // Sabah namazı (Fajr) her zaman aktif
     const prayers = [
-        {
+        // İmsak - SADECE Ramazan döneminde (sahur vakti)
+        ...(isRamadan ? [{
             id: 'imsak',
             time: prayerTimes.Imsak,
             name: translations.imsak,
             body: translations.alertBodySahur,
             isIftar: false,
-            isSahur: true
+            isSahur: true,
+            enabled: true
+        }] : []),
+        // Sabah namazı (Fajr) - Her zaman aktif
+        {
+            id: 'fajr',
+            time: prayerTimes.Fajr,
+            name: translations.fajr,
+            body: translations.alertBodyPrayer,
+            isIftar: false,
+            isSahur: false,
+            enabled: true
         },
         {
             id: 'dhuhr',
@@ -170,7 +188,8 @@ export async function scheduleDailyPrayerNotifications(
             name: translations.dhuhr,
             body: translations.alertBodyPrayer,
             isIftar: false,
-            isSahur: false
+            isSahur: false,
+            enabled: true
         },
         {
             id: 'asr',
@@ -178,15 +197,17 @@ export async function scheduleDailyPrayerNotifications(
             name: translations.asr,
             body: translations.alertBodyPrayer,
             isIftar: false,
-            isSahur: false
+            isSahur: false,
+            enabled: true
         },
         {
             id: 'maghrib',
             time: prayerTimes.Maghrib,
             name: translations.maghrib,
-            body: translations.alertBodyIftar,
-            isIftar: true,
-            isSahur: false
+            body: isRamadan ? translations.alertBodyIftar : translations.alertBodyPrayer,
+            isIftar: isRamadan,
+            isSahur: false,
+            enabled: true
         },
         {
             id: 'isha',
@@ -194,7 +215,8 @@ export async function scheduleDailyPrayerNotifications(
             name: translations.isha,
             body: translations.alertBodyPrayer,
             isIftar: false,
-            isSahur: false
+            isSahur: false,
+            enabled: true
         },
     ];
 
@@ -211,7 +233,8 @@ export async function scheduleDailyPrayerNotifications(
             title,
             prayer.body,
             prayerTime,
-            identifier
+            identifier,
+            soundEnabled
         );
 
         if (result) {

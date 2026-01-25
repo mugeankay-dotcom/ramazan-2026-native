@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ramazan 2026",
     "slug": "ramazan2026",
-    "version": "1.3.3",
+    "version": "1.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
