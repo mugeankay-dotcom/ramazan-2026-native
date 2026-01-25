@@ -44,6 +44,7 @@ export default function SettingsScreen({ navigation }: any) {
     const [showLocationResetModal, setShowLocationResetModal] = React.useState(false);
     const [showMethodModal, setShowMethodModal] = React.useState(false);
     const [showMenu, setShowMenu] = React.useState(false);
+    // const { prayerOffsets, setPrayerOffset } = useApp(); // Not needed anymore
 
     const handleResetLocation = async () => {
         try {
@@ -174,7 +175,7 @@ export default function SettingsScreen({ navigation }: any) {
                 </View>
 
                 {/* Version */}
-                <Text style={styles.version}>Ramazan 2026 v1.3.2 (Build 19)</Text>
+                <Text style={styles.version}>Ramazan 2026 v1.3.3 (Build 20)</Text>
             </ScrollView>
 
             {/* Calculation Method Modal */}
@@ -367,5 +368,20 @@ const styles = StyleSheet.create({
     },
     methodOptionActive: { backgroundColor: 'rgba(197, 160, 89, 0.1)' },
     methodOptionText: { color: '#ccc', fontSize: 14 },
-    methodOptionTextActive: { color: Colors.primary, fontWeight: 'bold' }
+    methodOptionTextActive: { color: Colors.primary, fontWeight: 'bold' },
+
+    // New Adjustment Styles
+    adjustmentRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#333',
+        width: '100%'
+    },
+    adjLabel: { color: '#ddd', fontSize: 16, flex: 1 },
+    adjControls: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    adjBtn: { backgroundColor: '#333', borderRadius: 20, width: 36, height: 36, justifyContent: 'center', alignItems: 'center' },
+    adjValue: { color: '#fff', fontSize: 16, fontWeight: 'bold', width: 60, textAlign: 'center' }
 });

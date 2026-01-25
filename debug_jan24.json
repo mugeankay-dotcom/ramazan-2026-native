@@ -1,0 +1,100 @@
+﻿{
+    "code":  200,
+    "status":  "OK",
+    "data":  {
+                 "timings":  {
+                                 "Fajr":  "06:56",
+                                 "Sunrise":  "08:15",
+                                 "Dhuhr":  "13:21",
+                                 "Asr":  "15:53",
+                                 "Sunset":  "18:18",
+                                 "Maghrib":  "18:18",
+                                 "Isha":  "19:41",
+                                 "Imsak":  "06:46",
+                                 "Midnight":  "01:16",
+                                 "Firstthird":  "22:55",
+                                 "Lastthird":  "03:38"
+                             },
+                 "date":  {
+                              "readable":  "24 Jan 2026",
+                              "timestamp":  "1769227200",
+                              "hijri":  {
+                                            "date":  "05-08-1447",
+                                            "format":  "DD-MM-YYYY",
+                                            "day":  "5",
+                                            "weekday":  {
+                                                            "en":  "Al Sabt",
+                                                            "ar":  "السبت"
+                                                        },
+                                            "month":  {
+                                                          "number":  8,
+                                                          "en":  "Shaʿbān",
+                                                          "ar":  "شَعْبان",
+                                                          "days":  29
+                                                      },
+                                            "year":  "1447",
+                                            "designation":  {
+                                                                "abbreviated":  "AH",
+                                                                "expanded":  "Anno Hegirae"
+                                                            },
+                                            "holidays":  [
+                                                             "Birth of Sayyidina `Ali ibn Husayn (ر)",
+                                                             "Urs of Imam Shamil al-Daghestani (ق)"
+                                                         ],
+                                            "adjustedHolidays":  [
+
+                                                                 ],
+                                            "method":  "HJCoSA"
+                                        },
+                              "gregorian":  {
+                                                "date":  "24-01-2026",
+                                                "format":  "DD-MM-YYYY",
+                                                "day":  "24",
+                                                "weekday":  {
+                                                                "en":  "Saturday"
+                                                            },
+                                                "month":  {
+                                                              "number":  1,
+                                                              "en":  "January"
+                                                          },
+                                                "year":  "2026",
+                                                "designation":  {
+                                                                    "abbreviated":  "AD",
+                                                                    "expanded":  "Anno Domini"
+                                                                },
+                                                "lunarSighting":  false
+                                            }
+                          },
+                 "meta":  {
+                              "latitude":  41.0082,
+                              "longitude":  28.9784,
+                              "timezone":  "Europe/Istanbul",
+                              "method":  {
+                                             "id":  13,
+                                             "name":  "Diyanet İşleri Başkanlığı, Turkey (experimental)",
+                                             "params":  {
+                                                            "Fajr":  18,
+                                                            "Isha":  17
+                                                        },
+                                             "location":  {
+                                                              "latitude":  39.9333635,
+                                                              "longitude":  32.8597419
+                                                          }
+                                         },
+                              "latitudeAdjustmentMethod":  "ANGLE_BASED",
+                              "midnightMode":  "STANDARD",
+                              "school":  "STANDARD",
+                              "offset":  {
+                                             "Imsak":  "10",
+                                             "Fajr":  "10",
+                                             "Sunrise":  -7,
+                                             "Dhuhr":  5,
+                                             "Asr":  4,
+                                             "Maghrib":  7,
+                                             "Sunset":  7,
+                                             "Isha":  0,
+                                             "Midnight":  0
+                                         }
+                          }
+             }
+}

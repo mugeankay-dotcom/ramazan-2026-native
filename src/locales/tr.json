@@ -103,5 +103,7 @@
     "alertBodyPrayer": "Ezan vakti girdi. Allah kabul etsin.",
     "alertBodySahur": "Sahur vakti! Oruca hazırlanın.",
     "close": "KAPAT",
-    "dailyHadith": "Günün Hadisi"
+    "dailyHadith": "Günün Hadisi",
+    "timeAdjustmentTitle": "Vakit Düzeltme",
+    "timeAdjustmentDesc": "İhtiyat payı ekleyin/çıkarın (Dk)"
 }

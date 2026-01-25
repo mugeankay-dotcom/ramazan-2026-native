@@ -20,6 +20,7 @@ import Svg, { Polygon, Defs, LinearGradient as SvgGradient, Stop } from 'react-n
 import { useApp } from '../context/AppContext';
 import { Colors } from '../theme';
 import AdBanner from '../components/AdBanner';
+import LanguageModal from '../components/LanguageModal';
 import {
     registerForPushNotificationsAsync,
     sendImmediateNotification,
@@ -42,7 +43,7 @@ const API_URL = 'https://api.aladhan.com/v1/calendar';
 
 export default function HomeScreen({ navigation }: any) {
     const insets = useSafeAreaInsets();
-    const { userLocation, setUserLocation, soundEnabled, vibrationEnabled, language, calculationMethod } = useApp();
+    const { userLocation, setUserLocation, soundEnabled, vibrationEnabled, language, calculationMethod, showLanguageModal } = useApp();
 
     // State
     const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -122,14 +123,35 @@ export default function HomeScreen({ navigation }: any) {
 
             // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
             if (calculationMethod === '13') {
-                const tune = "10,10,0,-1,1,-1,-1,-1,0";
-                apiUrl += `&tune=${tune}`;
+                // Fix: High-precision tune derived from Maltepe & Ordu Verification
+                // Imsak+10, Fajr+10, Sun 0, Dhuhr 0, Asr 0, Maghrib 0 (Patched below), Isha -1, Mid 0
+                const tune = "10,10,0,0,0,0,0,-1,0";
+                apiUrl += `&tune=${tune}&adjustment=0`;
             }
 
             const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('API Error');
             const data = await response.json();
+
             if (data.code === 200) {
-                const timings = data.data.timings;
+                let timings = data.data.timings;
+
+                // SPECIAL PATCH: Diyanet Maghrib Fix
+                // API Maghrib with Tune 0 is consistently +1 min off.
+                // Tune adjustment causes 8-min jump, so we patch in code.
+                if (calculationMethod === '13') {
+                    const patchMaghrib = (timeStr: string) => {
+                        const [h, m] = timeStr.split(':').map(Number);
+                        const d = new Date();
+                        d.setHours(h, m - 1, 0, 0); // Subtract 1 minute
+                        return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+                    };
+                    timings = {
+                        ...timings,
+                        Maghrib: patchMaghrib(timings.Maghrib)
+                    };
+                }
+
                 setTodayPrayers(timings);
                 updateLogic(timings); // Immediate update
 
@@ -146,8 +168,6 @@ export default function HomeScreen({ navigation }: any) {
                     alertBodyIftar: t('alertBodyIftar'),
                     alertBodySahur: t('alertBodySahur') || t('alertBodyPrayer'),
                 });
-
-
             }
         } catch (e) {
             console.log("Prayer Fetch Error", e);
@@ -291,10 +311,12 @@ export default function HomeScreen({ navigation }: any) {
             let apiUrlMar = `${API_URL}/2026/3?latitude=${lat}&longitude=${lng}&method=${calculationMethod}`;
 
             // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
+            // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
             if (calculationMethod === '13') {
-                const tune = "10,10,0,-1,1,-1,-1,-1,0";
-                apiUrl += `&tune=${tune}`;
-                apiUrlMar += `&tune=${tune}`;
+                // Fix: High-precision tune derived from Maltepe & Ordu Verification
+                const tune = "10,10,0,0,0,0,0,-1,0";
+                apiUrl += `&tune=${tune}&adjustment=0`;
+                apiUrlMar += `&tune=${tune}&adjustment=0`;
             }
 
             const [resFeb, resMar] = await Promise.all([
@@ -308,8 +330,21 @@ export default function HomeScreen({ navigation }: any) {
             if (dataFeb.code === 200) allDays.push(...dataFeb.data);
             if (dataMar.code === 200) allDays.push(...dataMar.data);
 
-            const ramadanData = [];
-            const startIndex = allDays.findIndex(d => d.date.gregorian.date === "19-02-2026");
+            // Maghrib Patch Helper for Imsakiye data
+            const patchMaghrib = (timeStr: string) => {
+                const [h, m] = timeStr.split(':').map(Number);
+                const d = new Date();
+                d.setHours(h, m - 1, 0, 0);
+                return d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            let ramadanData: any[] = [];
+
+            // Find start index for Ramadan (Feb 19)
+            const startIndex = allDays.findIndex((d: any) => {
+                // Aladhan date format: "DD-MM-YYYY" i.e. "19-02-2026"
+                return d.date.gregorian.date === "19-02-2026";
+            });
 
             if (startIndex !== -1) {
                 for (let i = 0; i < 29; i++) {
@@ -325,7 +360,9 @@ export default function HomeScreen({ navigation }: any) {
                             gunes: dayData.timings.Sunrise.split(' ')[0],
                             ogle: dayData.timings.Dhuhr.split(' ')[0],
                             ikindi: dayData.timings.Asr.split(' ')[0],
-                            iftar: dayData.timings.Maghrib.split(' ')[0],
+                            iftar: calculationMethod === '13'
+                                ? patchMaghrib(dayData.timings.Maghrib)
+                                : dayData.timings.Maghrib.split(' ')[0],
                             yatsi: dayData.timings.Isha.split(' ')[0]
                         });
                     }
@@ -583,8 +620,8 @@ export default function HomeScreen({ navigation }: any) {
                 </View>
             </Modal>
 
-            {/* DAILY HADITH MODAL - Shows on app open */}
-            <Modal visible={showHadithModal} transparent animationType="fade" onRequestClose={() => setShowHadithModal(false)}>
+            {/* DAILY HADITH MODAL - Shows on app open (after language selection) */}
+            <Modal visible={showHadithModal && !showLanguageModal} transparent animationType="fade" onRequestClose={() => setShowHadithModal(false)}>
                 <View style={styles.hadithModalOverlay}>
                     <View style={styles.hadithModalContent}>
                         <Ionicons name="book" size={50} color={GOLD_COLOR} />
@@ -610,6 +647,7 @@ export default function HomeScreen({ navigation }: any) {
             </Modal>
 
             <AdBanner position="bottom" />
+            <LanguageModal />
         </View>
     );
 }

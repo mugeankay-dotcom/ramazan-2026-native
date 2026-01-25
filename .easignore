@@ -8,13 +8,12 @@ npm-debug.*
 *.key
 *.mobileprovision
 *.orig.*
-/android
-/ios
 .DS_Store
 .thumb
 .idea
 .gradle
 build/
+builds/
 web-build/
 dist/
 credentials.json

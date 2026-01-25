@@ -103,5 +103,7 @@
     "alertBodyPrayer": "Prayer time has entered. May Allah accept.",
     "alertBodySahur": "Sahur time! Prepare for fasting.",
     "close": "CLOSE",
-    "dailyHadith": "Daily Hadith"
+    "dailyHadith": "Daily Hadith",
+    "timeAdjustmentTitle": "Time Adjustment",
+    "timeAdjustmentDesc": "Add/subtract safety margin (Min)"
 }
