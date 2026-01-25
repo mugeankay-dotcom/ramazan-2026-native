@@ -24,8 +24,12 @@ import {
     registerForPushNotificationsAsync,
     sendImmediateNotification,
     scheduleDailyPrayerNotifications,
-    getScheduledNotifications
+    getScheduledNotifications,
+    cancelAllScheduledNotifications
 } from '../utils/NotificationManager';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { requestWidgetUpdate } from 'react-native-android-widget';
+import { PrayerTimesWidget } from '../widget/PrayerTimesWidget';
 import { t } from '../utils/i18n';
 import { getDailyHadith } from '../data/dailyHadiths';
 
@@ -42,7 +46,22 @@ const API_URL = 'https://api.aladhan.com/v1/calendar';
 
 export default function HomeScreen({ navigation }: any) {
     const insets = useSafeAreaInsets();
-    const { userLocation, setUserLocation, soundEnabled, vibrationEnabled, language, calculationMethod } = useApp();
+    const { userLocation, setUserLocation, soundEnabled, vibrationEnabled, language, calculationMethod, asrSchool, highLatitudeMethod, midnightMode } = useApp();
+
+    // Yüksek enlem hesaplama metodu belirleme
+    const getHighLatitudeMethod = (latitude: number): number | null => {
+        // Manuel seçim varsa onu kullan
+        if (highLatitudeMethod !== '0') {
+            return parseInt(highLatitudeMethod);
+        }
+
+        // Otomatik algılama
+        const absLat = Math.abs(latitude);
+        if (absLat >= 65) return 3;      // Angle Based (İskandinav ülkeleri, Alaska)
+        if (absLat >= 55) return 2;      // One Seventh (İngiltere, Kanada, Rusya)
+        if (absLat >= 48) return 1;      // Middle of Night (Almanya kuzeyi, Polonya)
+        return null;                      // Normal enlem, düzeltme gerekmez
+    };
 
     // State
     const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -88,7 +107,7 @@ export default function HomeScreen({ navigation }: any) {
         if (userLocation) {
             fetchTodayPrayers(userLocation.lat, userLocation.lng);
         }
-    }, [userLocation, calculationMethod]);
+    }, [userLocation, calculationMethod, asrSchool, highLatitudeMethod, midnightMode]);
 
     // Fetch Full Imsakiye Data when modal opens
     useEffect(() => {
@@ -99,6 +118,165 @@ export default function HomeScreen({ navigation }: any) {
 
     const setupNotifications = async () => {
         await registerForPushNotificationsAsync();
+    };
+
+    // Widget verilerini kaydet ve güncelle
+    const updateWidgetData = async (prayerTimes: any, location: { lat: number; lng: number } | null) => {
+        try {
+            // Konum adını al (ters geocoding)
+            let locationName = 'Konum bekleniyor';
+            if (location) {
+                try {
+                    const [address] = await Location.reverseGeocodeAsync({
+                        latitude: location.lat,
+                        longitude: location.lng,
+                    });
+                    if (address) {
+                        locationName = address.city || address.district || address.subregion || 'Bilinmeyen';
+                    }
+                } catch (e) {
+                    console.log('Reverse geocode error:', e);
+                }
+            }
+
+            // Widget verilerini AsyncStorage'a kaydet
+            const widgetData = {
+                prayerTimes: {
+                    Imsak: prayerTimes.Imsak?.split(' ')[0],
+                    Fajr: prayerTimes.Fajr?.split(' ')[0],
+                    Sunrise: prayerTimes.Sunrise?.split(' ')[0],
+                    Dhuhr: prayerTimes.Dhuhr?.split(' ')[0],
+                    Asr: prayerTimes.Asr?.split(' ')[0],
+                    Maghrib: prayerTimes.Maghrib?.split(' ')[0],
+                    Isha: prayerTimes.Isha?.split(' ')[0],
+                },
+                location: locationName,
+                lastUpdate: new Date().toISOString(),
+            };
+            await AsyncStorage.setItem('widgetData', JSON.stringify(widgetData));
+
+            // Widget'ı güncelle
+            const now = new Date();
+            const isRamadan = now >= RAMADAN_START;
+            const isBeforeRamadan = now < RAMADAN_START;
+
+            // Sonraki namaz/hedef hesapla
+            const getNextTarget = () => {
+                const parseTimeToDate = (timeStr: string): Date => {
+                    const [hours, minutes] = timeStr.split(':').map(Number);
+                    const d = new Date();
+                    d.setHours(hours, minutes, 0, 0);
+                    return d;
+                };
+
+                if (isBeforeRamadan) {
+                    const days = Math.ceil((RAMADAN_START.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+                    const diff = RAMADAN_START.getTime() - now.getTime();
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    return {
+                        name: 'Ramazan 2026',
+                        time: `${days} gün`,
+                        countdown: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+                        targetType: 'prayer' as const,
+                    };
+                }
+
+                // Ramazan döneminde
+                if (isRamadan && prayerTimes.Imsak) {
+                    const imsakTime = parseTimeToDate(prayerTimes.Imsak.split(' ')[0]);
+                    if (now < imsakTime) {
+                        const diff = imsakTime.getTime() - now.getTime();
+                        const hours = Math.floor(diff / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        return {
+                            name: t('prayers.Imsak'),
+                            time: prayerTimes.Imsak.split(' ')[0],
+                            countdown: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+                            targetType: 'imsak' as const,
+                        };
+                    }
+                }
+
+                if (prayerTimes.Maghrib) {
+                    const maghribTime = parseTimeToDate(prayerTimes.Maghrib.split(' ')[0]);
+                    if (now < maghribTime) {
+                        const diff = maghribTime.getTime() - now.getTime();
+                        const hours = Math.floor(diff / (1000 * 60 * 60));
+                        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                        return {
+                            name: isRamadan ? 'İftar' : t('prayers.Maghrib'),
+                            time: prayerTimes.Maghrib.split(' ')[0],
+                            countdown: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+                            targetType: isRamadan ? 'iftar' as const : 'prayer' as const,
+                        };
+                    }
+                }
+
+                // Diğer namazları kontrol et
+                const prayers = [
+                    { key: 'Fajr', name: t('prayers.Fajr') },
+                    { key: 'Dhuhr', name: t('prayers.Dhuhr') },
+                    { key: 'Asr', name: t('prayers.Asr') },
+                    { key: 'Isha', name: t('prayers.Isha') },
+                ];
+
+                for (const prayer of prayers) {
+                    const timeStr = prayerTimes[prayer.key];
+                    if (timeStr) {
+                        const prayerTime = parseTimeToDate(timeStr.split(' ')[0]);
+                        if (now < prayerTime) {
+                            const diff = prayerTime.getTime() - now.getTime();
+                            const hours = Math.floor(diff / (1000 * 60 * 60));
+                            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                            return {
+                                name: prayer.name,
+                                time: timeStr.split(' ')[0],
+                                countdown: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+                                targetType: 'prayer' as const,
+                            };
+                        }
+                    }
+                }
+
+                // Tüm namazlar geçtiyse yarının sabah namazı
+                return {
+                    name: `${t('prayers.Fajr')} (yarın)`,
+                    time: prayerTimes.Fajr?.split(' ')[0] || '--:--',
+                    countdown: '--:--:--',
+                    targetType: 'prayer' as const,
+                };
+            };
+
+            const target = getNextTarget();
+
+            // Widget'ı güncelle (Platform.OS kontrolü)
+            if (Platform.OS === 'android') {
+                await requestWidgetUpdate({
+                    widgetName: 'PrayerTimesWidget',
+                    renderWidget: () => (
+                        <PrayerTimesWidget
+                            nextPrayer={target.name}
+                            nextPrayerTime={target.time}
+                            countdown={target.countdown}
+                            location={locationName}
+                            isRamadan={isRamadan}
+                            targetType={target.targetType}
+                        />
+                    ),
+                    widgetNotFound: () => {
+                        console.log('Widget not found on home screen');
+                    },
+                });
+                console.log('✅ Widget güncellendi');
+            }
+        } catch (error) {
+            console.log('Widget update error:', error);
+        }
     };
 
     const fetchLocation = async () => {
@@ -118,13 +296,36 @@ export default function HomeScreen({ navigation }: any) {
     const fetchTodayPrayers = async (lat: number, lng: number) => {
         try {
             const date = new Date();
-            let apiUrl = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}?latitude=${lat}&longitude=${lng}&method=${calculationMethod}`;
+
+            // API URL parametrelerini oluştur
+            const params = new URLSearchParams({
+                latitude: lat.toString(),
+                longitude: lng.toString(),
+                method: calculationMethod,
+                school: asrSchool,           // Hanefi (1) veya Şafi (0)
+                midnightMode: midnightMode,  // Standard (0) veya Jafari (1)
+            });
+
+            // Yüksek enlem düzeltmesi
+            const highLatMethod = getHighLatitudeMethod(lat);
+            if (highLatMethod !== null) {
+                params.append('latitudeAdjustmentMethod', highLatMethod.toString());
+            }
 
             // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
             if (calculationMethod === '13') {
-                const tune = "10,10,0,-1,1,-1,-1,-1,0";
-                apiUrl += `&tune=${tune}`;
+                params.append('tune', "10,10,0,-1,1,-1,-1,-1,0");
             }
+
+            // Timezone otomatik algılama
+            try {
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                params.append('timezonestring', timezone);
+            } catch (e) {
+                // Timezone alınamazsa API kendi hesaplayacak
+            }
+
+            const apiUrl = `https://api.aladhan.com/v1/timings/${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}?${params.toString()}`;
 
             const response = await fetch(apiUrl);
             const data = await response.json();
@@ -133,19 +334,38 @@ export default function HomeScreen({ navigation }: any) {
                 setTodayPrayers(timings);
                 updateLogic(timings); // Immediate update
 
-                // Schedule notifications for all prayer times
-                await scheduleDailyPrayerNotifications(timings, {
-                    imsak: t('prayers.Imsak'),
-                    sunrise: t('prayers.Sunrise'),
-                    dhuhr: t('prayers.Dhuhr'),
-                    asr: t('prayers.Asr'),
-                    maghrib: t('prayers.Maghrib'),
-                    isha: t('prayers.Isha'),
-                    alertTitle: (prayer: string) => t('alertTitle', { prayer }),
-                    alertBodyPrayer: t('alertBodyPrayer'),
-                    alertBodyIftar: t('alertBodyIftar'),
-                    alertBodySahur: t('alertBodySahur') || t('alertBodyPrayer'),
-                });
+                // Widget verilerini kaydet ve güncelle
+                await updateWidgetData(timings, userLocation);
+
+                // Bildirim planlaması - Günde sadece bir kez yapılacak (ayarlar değişmediyse)
+                const todayStr = new Date().toISOString().split('T')[0];
+                const settingsKey = `${calculationMethod}-${asrSchool}-${highLatitudeMethod}-${midnightMode}`;
+                const scheduleKey = `${todayStr}-${settingsKey}`;
+                const lastScheduleKey = await AsyncStorage.getItem('lastNotificationScheduleKey');
+
+                // Eğer bugün henüz planlanmadıysa VEYA ayarlar değiştiyse planla
+                if (lastScheduleKey !== scheduleKey) {
+                    // Ramazan kontrolü - sadece Ramazan döneminde iftar/sahur mesajları
+                    const isRamadan = new Date() >= RAMADAN_START;
+
+                    await scheduleDailyPrayerNotifications(timings, {
+                        imsak: t('prayers.Imsak'),
+                        fajr: t('prayers.Fajr'),
+                        sunrise: t('prayers.Sunrise'),
+                        dhuhr: t('prayers.Dhuhr'),
+                        asr: t('prayers.Asr'),
+                        maghrib: t('prayers.Maghrib'),
+                        isha: t('prayers.Isha'),
+                        alertTitle: (prayer: string) => t('alertTitle', { prayer }),
+                        alertBodyPrayer: t('alertBodyPrayer'),
+                        alertBodyIftar: t('alertBodyIftar'),
+                        alertBodySahur: t('alertBodySahur') || t('alertBodyPrayer'),
+                    }, isRamadan, soundEnabled);
+
+                    // Bugünün tarihini ve ayarları kaydet - bildirimlerin tekrar planlanmasını engeller
+                    await AsyncStorage.setItem('lastNotificationScheduleKey', scheduleKey);
+                    console.log('✅ Bildirimler planlandı:', todayStr, 'Ramazan:', isRamadan);
+                }
 
 
             }
@@ -287,15 +507,34 @@ export default function HomeScreen({ navigation }: any) {
     const fetchRamadanCalendar = async (lat: number, lng: number) => {
         setLoadingImsakiye(true);
         try {
-            let apiUrl = `${API_URL}/2026/2?latitude=${lat}&longitude=${lng}&method=${calculationMethod}`;
-            let apiUrlMar = `${API_URL}/2026/3?latitude=${lat}&longitude=${lng}&method=${calculationMethod}`;
+            // Ortak parametreleri oluştur
+            const baseParams = new URLSearchParams({
+                latitude: lat.toString(),
+                longitude: lng.toString(),
+                method: calculationMethod,
+                school: asrSchool,
+                midnightMode: midnightMode,
+            });
 
-            // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
-            if (calculationMethod === '13') {
-                const tune = "10,10,0,-1,1,-1,-1,-1,0";
-                apiUrl += `&tune=${tune}`;
-                apiUrlMar += `&tune=${tune}`;
+            // Yüksek enlem düzeltmesi
+            const highLatMethod = getHighLatitudeMethod(lat);
+            if (highLatMethod !== null) {
+                baseParams.append('latitudeAdjustmentMethod', highLatMethod.toString());
             }
+
+            // Diyanet için tune parametresi
+            if (calculationMethod === '13') {
+                baseParams.append('tune', "10,10,0,-1,1,-1,-1,-1,0");
+            }
+
+            // Timezone
+            try {
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                baseParams.append('timezonestring', timezone);
+            } catch (e) {}
+
+            const apiUrl = `${API_URL}/2026/2?${baseParams.toString()}`;
+            const apiUrlMar = `${API_URL}/2026/3?${baseParams.toString()}`;
 
             const [resFeb, resMar] = await Promise.all([
                 fetch(apiUrl),
@@ -518,12 +757,17 @@ export default function HomeScreen({ navigation }: any) {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalTitle}>{t('imsakiyeTitle')}</Text>
-                            <Text style={{ textAlign: 'center', color: '#666', fontSize: 10, marginBottom: 5 }}>
-                                {t(`methods.${calculationMethod}`) || t('methods.13')}
-                            </Text>
-                            <TouchableOpacity onPress={() => setShowImsakiye(false)}>
-                                <Ionicons name="close" size={24} color={GOLD_COLOR} />
+                            <View style={{ flex: 1 }}>
+                                <Text style={styles.modalTitle}>{t('imsakiyeTitle')}</Text>
+                                <Text style={{ color: '#888', fontSize: 10, marginTop: 2 }}>
+                                    {t(`methods.${calculationMethod}`) || t('methods.13')}
+                                </Text>
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => setShowImsakiye(false)}
+                                style={{ padding: 8, marginLeft: 10 }}
+                            >
+                                <Ionicons name="close-circle" size={28} color={GOLD_COLOR} />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.tableHeaderRow}>

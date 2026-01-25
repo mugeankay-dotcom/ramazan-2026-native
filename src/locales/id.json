@@ -45,6 +45,7 @@
     },
     "prayers": {
         "Imsak": "Imsak",
+        "Fajr": "Subuh",
         "Sunrise": "Terbit",
         "Dhuhr": "Dzuhur",
         "Asr": "Ashar",
@@ -84,7 +85,38 @@
         "3": "Liga Dunia Muslim (Global)",
         "2": "ISNA (Amerika Utara)",
         "5": "Otoritas Umum Mesir",
-        "4": "Umm al-Qura (Makkah)"
+        "4": "Umm al-Qura (Makkah)",
+        "1": "Universitas Karachi (Pakistan)",
+        "7": "Institut Geofisika Tehran (Iran)",
+        "8": "Wilayah Teluk",
+        "9": "Kuwait",
+        "10": "Qatar",
+        "11": "MUIS (Singapura)",
+        "12": "UOIF (Prancis)",
+        "14": "Muslim Rusia",
+        "17": "JAKIM (Malaysia)",
+        "20": "Kemenag (Indonesia)",
+        "0": "Syiah Itsna Asyari (Qom)"
+    },
+    "asrSchoolLabel": "Mazhab Perhitungan Ashar",
+    "asrSchoolDesc": "Metode perhitungan waktu salat Ashar",
+    "schools": {
+        "hanafi": "Hanafi",
+        "shafi": "Syafi'i / Maliki / Hanbali"
+    },
+    "highLatLabel": "Penyesuaian Lintang Tinggi",
+    "highLatDesc": "Perhitungan khusus untuk lintang 48°+",
+    "highLat": {
+        "auto": "Otomatis (Direkomendasikan)",
+        "middleNight": "Tengah Malam",
+        "oneSeventh": "Sepertujuh",
+        "angleBased": "Berbasis Sudut"
+    },
+    "midnightLabel": "Perhitungan Tengah Malam",
+    "midnightDesc": "Metode perhitungan tengah malam Islami",
+    "midnight": {
+        "standard": "Standar (Sunni)",
+        "jafari": "Jafari (Syiah)"
     },
     "confirmReset": "Konfirmasi Reset",
     "confirmResetMessage": "Apakah Anda yakin ingin mereset penghitung dzikir?",
@@ -98,7 +130,7 @@
     "countdownTomorrowImsak": "WAKTU HINGGA IMSAK BESOK",
     "targetSahur": "SAHUR / IMSAK",
     "targetIftar": "BUKA PUASA",
-    "alertTitle": "📢 WAKTU {prayer}!",
+    "alertTitle": "📢 WAKTU %{prayer}!",
     "alertBodyIftar": "Semoga Allah menerima puasa Anda. Selamat berbuka!",
     "alertBodyPrayer": "Waktu salat telah tiba. Semoga Allah menerima.",
     "alertBodySahur": "Waktu sahur! Bersiaplah untuk berpuasa.",

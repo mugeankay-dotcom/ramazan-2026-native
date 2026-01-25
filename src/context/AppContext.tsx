@@ -21,6 +21,12 @@ interface AppContextType {
     setUserLocation: (loc: { lat: number; lng: number } | null) => void;
     calculationMethod: string;
     setCalculationMethod: (method: string) => void;
+    asrSchool: string;
+    setAsrSchool: (school: string) => void;
+    highLatitudeMethod: string;
+    setHighLatitudeMethod: (method: string) => void;
+    midnightMode: string;
+    setMidnightMode: (mode: string) => void;
     isLoading: boolean;
 }
 
@@ -36,6 +42,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const [dhikrHistory, setDhikrHistoryState] = useState<{ [date: string]: number }>({});
     const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
     const [calculationMethod, setCalculationMethodState] = useState('13'); // Default: Diyanet (13)
+    const [asrSchool, setAsrSchoolState] = useState('1'); // Default: Hanafi (1), Shafi (0)
+    const [highLatitudeMethod, setHighLatitudeMethodState] = useState('0'); // Default: Auto (0)
+    const [midnightMode, setMidnightModeState] = useState('0'); // Default: Standard (0), Jafari (1)
 
     useEffect(() => {
         loadPreferences();
@@ -49,6 +58,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             const savedDhikr = await AsyncStorage.getItem('dhikrCount');
             const savedHistory = await AsyncStorage.getItem('dhikrHistory');
             const savedMethod = await AsyncStorage.getItem('calculationMethod');
+            const savedAsrSchool = await AsyncStorage.getItem('asrSchool');
+            const savedHighLatMethod = await AsyncStorage.getItem('highLatitudeMethod');
+            const savedMidnightMode = await AsyncStorage.getItem('midnightMode');
 
             if (savedLang) {
                 setLanguageState(savedLang);
@@ -63,6 +75,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             if (savedDhikr) setDhikrCountState(parseInt(savedDhikr, 10));
             if (savedHistory) setDhikrHistoryState(JSON.parse(savedHistory));
             if (savedMethod) setCalculationMethodState(savedMethod);
+            if (savedAsrSchool) setAsrSchoolState(savedAsrSchool);
+            if (savedHighLatMethod) setHighLatitudeMethodState(savedHighLatMethod);
+            if (savedMidnightMode) setMidnightModeState(savedMidnightMode);
         } catch (e) {
             console.error('Error loading preferences:', e);
             setShowLanguageModal(true);
@@ -81,6 +96,21 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const setCalculationMethod = async (method: string) => {
         setCalculationMethodState(method);
         await AsyncStorage.setItem('calculationMethod', method);
+    };
+
+    const setAsrSchool = async (school: string) => {
+        setAsrSchoolState(school);
+        await AsyncStorage.setItem('asrSchool', school);
+    };
+
+    const setHighLatitudeMethod = async (method: string) => {
+        setHighLatitudeMethodState(method);
+        await AsyncStorage.setItem('highLatitudeMethod', method);
+    };
+
+    const setMidnightMode = async (mode: string) => {
+        setMidnightModeState(mode);
+        await AsyncStorage.setItem('midnightMode', mode);
     };
 
     const setSoundEnabled = async (enabled: boolean) => {
@@ -136,6 +166,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                 setUserLocation,
                 calculationMethod,
                 setCalculationMethod,
+                asrSchool,
+                setAsrSchool,
+                highLatitudeMethod,
+                setHighLatitudeMethod,
+                midnightMode,
+                setMidnightMode,
                 isLoading,
             }}
         >

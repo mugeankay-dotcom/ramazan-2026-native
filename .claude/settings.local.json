@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(npx tsc:*)",
+      "Bash(eas build:*)",
+      "Bash(eas credentials:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

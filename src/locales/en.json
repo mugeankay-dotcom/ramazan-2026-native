@@ -45,6 +45,7 @@
     },
     "prayers": {
         "Imsak": "Imsak",
+        "Fajr": "Fajr",
         "Sunrise": "Sunrise",
         "Dhuhr": "Dhuhr",
         "Asr": "Asr",
@@ -84,7 +85,38 @@
         "3": "Muslim World League (Global)",
         "2": "ISNA (North America)",
         "5": "Egyptian General Authority",
-        "4": "Umm al-Qura (Mekke)"
+        "4": "Umm al-Qura (Makkah)",
+        "1": "University of Karachi (Pakistan)",
+        "7": "Tehran Geophysics Institute (Iran)",
+        "8": "Gulf Region",
+        "9": "Kuwait",
+        "10": "Qatar",
+        "11": "MUIS (Singapore)",
+        "12": "UOIF (France)",
+        "14": "Russia Muslims",
+        "17": "JAKIM (Malaysia)",
+        "20": "Kemenag (Indonesia)",
+        "0": "Shia Ithna-Ashari (Qum)"
+    },
+    "asrSchoolLabel": "Asr Calculation School",
+    "asrSchoolDesc": "Method for Asr prayer time calculation",
+    "schools": {
+        "hanafi": "Hanafi",
+        "shafi": "Shafi'i / Maliki / Hanbali"
+    },
+    "highLatLabel": "High Latitude Adjustment",
+    "highLatDesc": "Special calculation for 48°+ latitudes",
+    "highLat": {
+        "auto": "Automatic (Recommended)",
+        "middleNight": "Middle of the Night",
+        "oneSeventh": "One Seventh",
+        "angleBased": "Angle Based"
+    },
+    "midnightLabel": "Midnight Calculation",
+    "midnightDesc": "Islamic midnight calculation method",
+    "midnight": {
+        "standard": "Standard (Sunni)",
+        "jafari": "Jafari (Shia)"
     },
     "confirmReset": "Confirm Reset",
     "confirmResetMessage": "Are you sure you want to reset the dhikr counter?",
@@ -98,7 +130,7 @@
     "countdownTomorrowImsak": "TIME UNTIL TOMORROW'S IMSAK",
     "targetSahur": "SAHUR / IMSAK",
     "targetIftar": "IFTAR",
-    "alertTitle": "📢 {prayer} TIME!",
+    "alertTitle": "📢 %{prayer} TIME!",
     "alertBodyIftar": "May Allah accept your fast. Blessed Iftar!",
     "alertBodyPrayer": "Prayer time has entered. May Allah accept.",
     "alertBodySahur": "Sahur time! Prepare for fasting.",

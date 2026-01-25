@@ -45,6 +45,7 @@
     },
     "prayers": {
         "Imsak": "Imsak",
+        "Fajr": "Fajr",
         "Sunrise": "Sonnenaufgang",
         "Dhuhr": "Dhuhr",
         "Asr": "Asr",
@@ -84,7 +85,38 @@
         "3": "Muslim World League (Global)",
         "2": "ISNA (Nordamerika)",
         "5": "Ägyptische Generalautorität",
-        "4": "Umm al-Qura (Mekka)"
+        "4": "Umm al-Qura (Mekka)",
+        "1": "Universität Karachi (Pakistan)",
+        "7": "Teheran Geophysik Institut (Iran)",
+        "8": "Golfregion",
+        "9": "Kuwait",
+        "10": "Katar",
+        "11": "MUIS (Singapur)",
+        "12": "UOIF (Frankreich)",
+        "14": "Russische Muslime",
+        "17": "JAKIM (Malaysia)",
+        "20": "Kemenag (Indonesien)",
+        "0": "Schia Ithna-Ashari (Qum)"
+    },
+    "asrSchoolLabel": "Asr-Berechnungsschule",
+    "asrSchoolDesc": "Methode zur Berechnung der Asr-Gebetszeit",
+    "schools": {
+        "hanafi": "Hanafi",
+        "shafi": "Schafi'i / Maliki / Hanbali"
+    },
+    "highLatLabel": "Hohe Breitenanpassung",
+    "highLatDesc": "Spezielle Berechnung für 48°+ Breitengrade",
+    "highLat": {
+        "auto": "Automatisch (Empfohlen)",
+        "middleNight": "Mitte der Nacht",
+        "oneSeventh": "Ein Siebtel",
+        "angleBased": "Winkelbasiert"
+    },
+    "midnightLabel": "Mitternachtsberechnung",
+    "midnightDesc": "Islamische Mitternachtsberechnungsmethode",
+    "midnight": {
+        "standard": "Standard (Sunni)",
+        "jafari": "Jafari (Schia)"
     },
     "confirmReset": "Zurücksetzen bestätigen",
     "confirmResetMessage": "Sind Sie sicher, dass Sie den Dhikr-Zähler zurücksetzen möchten?",
@@ -98,7 +130,7 @@
     "countdownTomorrowImsak": "ZEIT BIS ZUM MORGIGEN IMSAK",
     "targetSahur": "SAHUR / IMSAK",
     "targetIftar": "IFTAR",
-    "alertTitle": "📢 {prayer} ZEIT!",
+    "alertTitle": "📢 %{prayer} ZEIT!",
     "alertBodyIftar": "Möge Allah Ihr Fasten annehmen. Gesegnetes Iftar!",
     "alertBodyPrayer": "Die Gebetszeit ist eingetreten. Möge Allah annehmen.",
     "alertBodySahur": "Sahur Zeit! Bereiten Sie sich auf das Fasten vor.",

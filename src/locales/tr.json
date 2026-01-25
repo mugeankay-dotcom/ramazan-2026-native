@@ -45,6 +45,7 @@
     },
     "prayers": {
         "Imsak": "İmsak",
+        "Fajr": "Sabah",
         "Sunrise": "Güneş",
         "Dhuhr": "Öğle",
         "Asr": "İkindi",
@@ -84,7 +85,38 @@
         "3": "Muslim World League (Global)",
         "2": "ISNA (Kuzey Amerika)",
         "5": "Mısır Genel Otoritesi (Afrika)",
-        "4": "Umm al-Qura (Mekke)"
+        "4": "Umm al-Qura (Mekke)",
+        "1": "Karachi Üniversitesi (Pakistan)",
+        "7": "Tahran Jeofizik Enstitüsü (İran)",
+        "8": "Körfez Bölgesi",
+        "9": "Kuveyt",
+        "10": "Katar",
+        "11": "MUIS (Singapur)",
+        "12": "UOIF (Fransa)",
+        "14": "Rusya Müslümanları",
+        "17": "JAKIM (Malezya)",
+        "20": "Kemenag (Endonezya)",
+        "0": "Şia İsna Aşeri (Kum)"
+    },
+    "asrSchoolLabel": "İkindi Hesaplama Okulu",
+    "asrSchoolDesc": "Asr namazı vakti hesaplama yöntemi",
+    "schools": {
+        "hanafi": "Hanefi",
+        "shafi": "Şafi / Maliki / Hanbeli"
+    },
+    "highLatLabel": "Yüksek Enlem Düzeltmesi",
+    "highLatDesc": "48°+ enlemler için özel hesaplama",
+    "highLat": {
+        "auto": "Otomatik (Önerilen)",
+        "middleNight": "Gece Ortası",
+        "oneSeventh": "Yedide Bir",
+        "angleBased": "Açı Tabanlı"
+    },
+    "midnightLabel": "Gece Yarısı Hesaplama",
+    "midnightDesc": "İslami gece yarısı hesaplama yöntemi",
+    "midnight": {
+        "standard": "Standart (Sünni)",
+        "jafari": "Caferi (Şia)"
     },
     "confirmReset": "Sıfırlama Onayı",
     "confirmResetMessage": "Zikir sayacını sıfırlamak istediğinize emin misiniz?",
@@ -98,7 +130,7 @@
     "countdownTomorrowImsak": "YARINKİ İMSAK VAKTİNE KALAN SÜRE",
     "targetSahur": "SAHUR / İMSAK",
     "targetIftar": "İFTAR",
-    "alertTitle": "📢 {prayer} VAKTİ!",
+    "alertTitle": "📢 %{prayer} VAKTİ!",
     "alertBodyIftar": "Allah orucunuzu kabul etsin. Hayırlı iftarlar!",
     "alertBodyPrayer": "Ezan vakti girdi. Allah kabul etsin.",
     "alertBodySahur": "Sahur vakti! Oruca hazırlanın.",

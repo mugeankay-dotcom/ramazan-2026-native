@@ -45,6 +45,7 @@
     },
     "prayers": {
         "Imsak": "Imsak",
+        "Fajr": "Fajr",
         "Sunrise": "Lever du soleil",
         "Dhuhr": "Dhuhr",
         "Asr": "Asr",
@@ -84,7 +85,38 @@
         "3": "Ligue Islamique Mondiale (Global)",
         "2": "ISNA (Amérique du Nord)",
         "5": "Autorité Générale Égyptienne",
-        "4": "Umm al-Qura (La Mecque)"
+        "4": "Umm al-Qura (La Mecque)",
+        "1": "Université de Karachi (Pakistan)",
+        "7": "Institut Géophysique Téhéran (Iran)",
+        "8": "Région du Golfe",
+        "9": "Koweït",
+        "10": "Qatar",
+        "11": "MUIS (Singapour)",
+        "12": "UOIF (France)",
+        "14": "Musulmans de Russie",
+        "17": "JAKIM (Malaisie)",
+        "20": "Kemenag (Indonésie)",
+        "0": "Chiite Ithna-Ashari (Qom)"
+    },
+    "asrSchoolLabel": "École de calcul Asr",
+    "asrSchoolDesc": "Méthode de calcul de l'heure de prière Asr",
+    "schools": {
+        "hanafi": "Hanafi",
+        "shafi": "Chafi'i / Maliki / Hanbali"
+    },
+    "highLatLabel": "Ajustement haute latitude",
+    "highLatDesc": "Calcul spécial pour les latitudes 48°+",
+    "highLat": {
+        "auto": "Automatique (Recommandé)",
+        "middleNight": "Milieu de la nuit",
+        "oneSeventh": "Un septième",
+        "angleBased": "Basé sur l'angle"
+    },
+    "midnightLabel": "Calcul de minuit",
+    "midnightDesc": "Méthode de calcul de minuit islamique",
+    "midnight": {
+        "standard": "Standard (Sunnite)",
+        "jafari": "Jafari (Chiite)"
     },
     "confirmReset": "Confirmer la réinitialisation",
     "confirmResetMessage": "Êtes-vous sûr de vouloir réinitialiser le compteur de dhikr?",
@@ -98,7 +130,7 @@
     "countdownTomorrowImsak": "TEMPS JUSQU'À L'IMSAK DE DEMAIN",
     "targetSahur": "SAHOUR / IMSAK",
     "targetIftar": "IFTAR",
-    "alertTitle": "📢 L'HEURE DE {prayer}!",
+    "alertTitle": "📢 L'HEURE DE %{prayer}!",
     "alertBodyIftar": "Qu'Allah accepte votre jeûne. Bon Iftar!",
     "alertBodyPrayer": "L'heure de la prière est arrivée. Qu'Allah accepte.",
     "alertBodySahur": "L'heure du Sahour! Préparez-vous pour le jeûne.",
