@@ -26,7 +26,7 @@ export default function App() {
     mobileAds()
       .initialize()
       .then(adapterStatuses => {
-        console.log('AdMob Initialized', adapterStatuses);
+
       });
   }, []);
   const [fontsLoaded] = useFonts({

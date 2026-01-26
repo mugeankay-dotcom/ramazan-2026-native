@@ -102,7 +102,7 @@ export default function SettingsScreen({ navigation }: any) {
                 routes: [{ name: 'Home' }],
             });
         } catch (e) {
-            console.error(e);
+
         }
     };
 

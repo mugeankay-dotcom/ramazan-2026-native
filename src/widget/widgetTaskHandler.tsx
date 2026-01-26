@@ -42,7 +42,7 @@ async function getWidgetData(): Promise<WidgetData> {
             return JSON.parse(data);
         }
     } catch (error) {
-        console.log('Widget data read error:', error);
+
     }
     return {};
 }

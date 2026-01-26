@@ -79,7 +79,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             if (savedHighLatMethod) setHighLatitudeMethodState(savedHighLatMethod);
             if (savedMidnightMode) setMidnightModeState(savedMidnightMode);
         } catch (e) {
-            console.error('Error loading preferences:', e);
+
             setShowLanguageModal(true);
         } finally {
             setIsLoading(false);

@@ -72,12 +72,12 @@ export const AdBanner: React.FC<AdBannerProps> = ({ position = 'bottom' }) => {
                         requestNonPersonalizedAdsOnly: true,
                     }}
                     onAdLoaded={() => {
-                        console.log('✅ AdMob Banner Loaded');
+
                         setAdLoaded(true);
                         setAdError(null);
                     }}
                     onAdFailedToLoad={(error: any) => {
-                        console.error('❌ AdMob Load Error:', error.code, error.message);
+
                         setAdError(`Kod: ${error.code || 'Bilinmiyor'}`);
                         setAdLoaded(false);
                     }}
