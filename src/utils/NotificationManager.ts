@@ -19,6 +19,7 @@ if (!isExpoGo) {
 export async function registerForPushNotificationsAsync() {
     // Skip registration in Expo Go
     if (isExpoGo) {
+        console.log('⚠️ Push notifications not supported in Expo Go. Build a development build to test.');
         return false;
     }
 
@@ -40,8 +41,13 @@ export async function registerForPushNotificationsAsync() {
             finalStatus = status;
         }
 
-        return finalStatus === 'granted';
+        if (finalStatus !== 'granted') {
+            console.log('Notification permission not granted!');
+            return false;
+        }
+        return true;
     } catch (error) {
+        console.log('Notification setup error:', error);
         return false;
     }
 }
@@ -49,13 +55,15 @@ export async function registerForPushNotificationsAsync() {
 // Cancel all scheduled notifications
 export async function cancelAllScheduledNotifications() {
     if (isExpoGo) {
+        console.log('[DEV] Would cancel all scheduled notifications');
         return;
     }
 
     try {
         await Notifications.cancelAllScheduledNotificationsAsync();
+        console.log('All scheduled notifications cancelled');
     } catch (error) {
-        // Silent fail
+        console.log('Cancel notifications error:', error);
     }
 }
 
@@ -68,6 +76,7 @@ export async function scheduleNotificationAtTime(
     playSound: boolean = true
 ) {
     if (isExpoGo) {
+        console.log(`[DEV] Would schedule notification: ${title} at ${targetDate.toLocaleTimeString()}`);
         return null;
     }
 
@@ -77,6 +86,7 @@ export async function scheduleNotificationAtTime(
 
         // Don't schedule if time has passed
         if (triggerSeconds <= 0) {
+            console.log(`Skipping past notification: ${title} (${identifier})`);
             return null;
         }
 
@@ -94,8 +104,10 @@ export async function scheduleNotificationAtTime(
             identifier: identifier,
         });
 
+        console.log(`✅ Scheduled: ${identifier} at ${targetDate.toLocaleTimeString()} (${triggerSeconds}s) sound:${playSound}`);
         return notificationId;
     } catch (error) {
+        console.log('Schedule notification error:', error);
         return null;
     }
 }
@@ -124,10 +136,11 @@ export async function scheduleDailyPrayerNotifications(
         alertBodyIftar: string;
         alertBodySahur: string;
     },
-    isRamadan: boolean = false,
-    soundEnabled: boolean = true
+    isRamadan: boolean = false,  // Ramazan kontrolü
+    soundEnabled: boolean = true  // Ses kontrolü
 ) {
     if (isExpoGo) {
+        console.log('[DEV] Would schedule daily prayer notifications');
         return;
     }
 
@@ -146,6 +159,8 @@ export async function scheduleDailyPrayerNotifications(
     };
 
     // Prayer notifications to schedule
+    // İmsak bildirimi SADECE Ramazan'da aktif (sahur için)
+    // Sabah namazı (Fajr) her zaman aktif
     const prayers = [
         // İmsak - SADECE Ramazan döneminde (sahur vakti)
         ...(isRamadan ? [{
@@ -227,12 +242,14 @@ export async function scheduleDailyPrayerNotifications(
         }
     }
 
+
     return scheduledCount;
 }
 
 // Legacy function - keep for compatibility
 export async function schedulePrayerNotification(title: string, body: string, triggerSeconds: number) {
     if (isExpoGo) {
+        console.log(`[DEV] Would schedule notification: ${title}`);
         return;
     }
 
@@ -247,12 +264,13 @@ export async function schedulePrayerNotification(title: string, body: string, tr
             trigger: { seconds: triggerSeconds, channelId: 'prayer-channel' },
         });
     } catch (error) {
-        // Silent fail
+        console.log('Schedule notification error:', error);
     }
 }
 
 export async function sendImmediateNotification(title: string, body: string, playSound: boolean = true) {
     if (isExpoGo) {
+        console.log(`[DEV] Would send notification: ${title} - ${body}`);
         return;
     }
 
@@ -267,20 +285,26 @@ export async function sendImmediateNotification(title: string, body: string, pla
             trigger: null,
         });
     } catch (error) {
-        // Silent fail
+        console.log('Send notification error:', error);
     }
 }
 
 // Get all scheduled notifications (for debugging)
 export async function getScheduledNotifications() {
     if (isExpoGo) {
+        console.log('[DEV] Would get scheduled notifications');
         return [];
     }
 
     try {
         const notifications = await Notifications.getAllScheduledNotificationsAsync();
+        console.log('Scheduled notifications:', notifications.length);
+        notifications.forEach(n => {
+            console.log(`  - ${n.identifier}: ${n.content.title}`);
+        });
         return notifications;
     } catch (error) {
+        console.log('Get scheduled notifications error:', error);
         return [];
     }
 }

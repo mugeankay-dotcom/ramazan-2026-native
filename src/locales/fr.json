@@ -99,21 +99,21 @@
         "0": "Chiite Ithna-Ashari (Qom)"
     },
     "asrSchoolLabel": "École de calcul Asr",
-    "asrSchoolDesc": "Méthode de calcul de l'heure de prière Asr",
+    "asrSchoolDesc": "Hanafi: ombre 2× | Chafi: ombre 1× hauteur objet",
     "schools": {
-        "hanafi": "Hanafi",
+        "hanafi": "Hanafi (Turquie, Pakistan)",
         "shafi": "Chafi'i / Maliki / Hanbali"
     },
     "highLatLabel": "Ajustement haute latitude",
-    "highLatDesc": "Calcul spécial pour les latitudes 48°+",
+    "highLatDesc": "Pour les pays nordiques (Scandinavie, UK, Nord Allemagne)",
     "highLat": {
         "auto": "Automatique (Recommandé)",
-        "middleNight": "Milieu de la nuit",
-        "oneSeventh": "Un septième",
-        "angleBased": "Basé sur l'angle"
+        "middleNight": "Milieu de la nuit (48°+)",
+        "oneSeventh": "Un septième (55°+)",
+        "angleBased": "Basé sur l'angle (65°+)"
     },
     "midnightLabel": "Calcul de minuit",
-    "midnightDesc": "Méthode de calcul de minuit islamique",
+    "midnightDesc": "Méthode de calcul pour Isha/Tahajjud",
     "midnight": {
         "standard": "Standard (Sunnite)",
         "jafari": "Jafari (Chiite)"
@@ -135,5 +135,25 @@
     "alertBodyPrayer": "L'heure de la prière est arrivée. Qu'Allah accepte.",
     "alertBodySahur": "L'heure du Sahour! Préparez-vous pour le jeûne.",
     "close": "FERMER",
-    "dailyHadith": "Hadith du Jour"
+    "dailyHadith": "Hadith du Jour",
+    "recommendTitle": "Recommandé pour vous",
+    "applyRecommended": "Appliquer les paramètres recommandés",
+    "usingRecommended": "Paramètres recommandés utilisés",
+    "advancedSettings": "Paramètres avancés",
+    "advancedHint": "Ces paramètres peuvent rester aux valeurs par défaut pour la plupart des utilisateurs.",
+    "recommendNote": {
+        "turkey": "Le calcul Diyanet (Affaires religieuses turques) est recommandé pour la Turquie. La méthode Chafi est automatiquement utilisée pour l'heure de l'Asr.",
+        "pakistan": "Le calcul de l'Université de Karachi avec l'école Hanafi est recommandé pour le Pakistan.",
+        "indonesia": "Le calcul Kemenag (Ministère des Affaires religieuses) est recommandé pour l'Indonésie.",
+        "malaysia": "Le calcul JAKIM est recommandé pour la Malaisie.",
+        "gulf": "Le calcul Umm al-Qura (La Mecque) est recommandé pour les pays du Golfe.",
+        "egypt": "Le calcul de l'Autorité générale égyptienne est recommandé pour l'Égypte et l'Afrique.",
+        "iran": "Le calcul de l'Institut géophysique de Téhéran est recommandé pour l'Iran.",
+        "france": "Le calcul UOIF est recommandé pour la France.",
+        "singapore": "Le calcul MUIS est recommandé pour Singapour.",
+        "russia": "Le calcul des Musulmans de Russie est recommandé pour la Russie.",
+        "america": "Le calcul ISNA est recommandé pour l'Amérique du Nord.",
+        "europe": "Le calcul de la Ligue Islamique Mondiale est recommandé pour l'Europe.",
+        "global": "Le calcul de la Ligue Islamique Mondiale (Global) est recommandé pour votre emplacement."
+    }
 }

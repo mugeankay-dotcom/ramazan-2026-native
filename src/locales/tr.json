@@ -99,21 +99,21 @@
         "0": "Şia İsna Aşeri (Kum)"
     },
     "asrSchoolLabel": "İkindi Hesaplama Okulu",
-    "asrSchoolDesc": "Asr namazı vakti hesaplama yöntemi",
+    "asrSchoolDesc": "Hanefi: gölge 2 kat | Şafi: gölge 1 kat",
     "schools": {
-        "hanafi": "Hanefi",
+        "hanafi": "Hanefi (Türkiye, Pakistan)",
         "shafi": "Şafi / Maliki / Hanbeli"
     },
     "highLatLabel": "Yüksek Enlem Düzeltmesi",
-    "highLatDesc": "48°+ enlemler için özel hesaplama",
+    "highLatDesc": "Kuzey ülkeleri için (İskandinav, İngiltere, Almanya kuzeyi)",
     "highLat": {
         "auto": "Otomatik (Önerilen)",
-        "middleNight": "Gece Ortası",
-        "oneSeventh": "Yedide Bir",
-        "angleBased": "Açı Tabanlı"
+        "middleNight": "Gece Ortası (48°+)",
+        "oneSeventh": "Yedide Bir (55°+)",
+        "angleBased": "Açı Tabanlı (65°+)"
     },
     "midnightLabel": "Gece Yarısı Hesaplama",
-    "midnightDesc": "İslami gece yarısı hesaplama yöntemi",
+    "midnightDesc": "Yatsı/teheccüd zamanı hesaplama yöntemi",
     "midnight": {
         "standard": "Standart (Sünni)",
         "jafari": "Caferi (Şia)"
@@ -136,6 +136,24 @@
     "alertBodySahur": "Sahur vakti! Oruca hazırlanın.",
     "close": "KAPAT",
     "dailyHadith": "Günün Hadisi",
-    "timeAdjustmentTitle": "Vakit Düzeltme",
-    "timeAdjustmentDesc": "İhtiyat payı ekleyin/çıkarın (Dk)"
+    "recommendTitle": "Sizin İçin Öneri",
+    "applyRecommended": "Önerilen Ayarları Uygula",
+    "usingRecommended": "Önerilen ayarlar kullanılıyor",
+    "advancedSettings": "Gelişmiş Ayarlar",
+    "advancedHint": "Bu ayarlar çoğu kullanıcı için varsayılan değerlerde kalabilir.",
+    "recommendNote": {
+        "turkey": "Türkiye'de Diyanet İşleri Başkanlığı hesaplaması önerilir. İkindi vakti için otomatik olarak Şafi metodu kullanılır.",
+        "pakistan": "Pakistan için Karachi Üniversitesi hesaplaması ve Hanefi okulu önerilir.",
+        "indonesia": "Endonezya için Kemenag (Din İşleri Bakanlığı) hesaplaması önerilir.",
+        "malaysia": "Malezya için JAKIM hesaplaması önerilir.",
+        "gulf": "Körfez ülkeleri için Umm al-Qura (Mekke) hesaplaması önerilir.",
+        "egypt": "Mısır ve Afrika için Mısır Genel Otoritesi hesaplaması önerilir.",
+        "iran": "İran için Tahran Jeofizik Enstitüsü hesaplaması önerilir.",
+        "france": "Fransa için UOIF hesaplaması önerilir.",
+        "singapore": "Singapur için MUIS hesaplaması önerilir.",
+        "russia": "Rusya için Rusya Müslümanları hesaplaması önerilir.",
+        "america": "Kuzey Amerika için ISNA hesaplaması önerilir.",
+        "europe": "Avrupa için Muslim World League hesaplaması önerilir.",
+        "global": "Konumunuz için Muslim World League (Global) hesaplaması önerilir."
+    }
 }

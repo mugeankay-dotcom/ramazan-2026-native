@@ -32,7 +32,8 @@ export default function SettingsScreen({ navigation }: any) {
         highLatitudeMethod,
         setHighLatitudeMethod,
         midnightMode,
-        setMidnightMode
+        setMidnightMode,
+        userCity
     } = useApp();
 
     const currentLangName = supportedLanguages.find(l => l.code === language)?.name || 'Türkçe';
@@ -87,7 +88,101 @@ export default function SettingsScreen({ navigation }: any) {
     const [showHighLatModal, setShowHighLatModal] = React.useState(false);
     const [showMidnightModal, setShowMidnightModal] = React.useState(false);
     const [showMenu, setShowMenu] = React.useState(false);
-    // const { prayerOffsets, setPrayerOffset } = useApp(); // Not needed anymore
+    const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
+
+    // Akıllı öneri sistemi - şehir/ülke bazlı
+    const getRecommendation = () => {
+        const city = userCity?.toLowerCase() || '';
+
+        // Türkiye şehirleri
+        const turkishCities = ['istanbul', 'ankara', 'izmir', 'bursa', 'antalya', 'adana', 'konya', 'gaziantep', 'şanlıurfa', 'mersin', 'diyarbakır', 'kayseri', 'eskişehir', 'samsun', 'denizli', 'adapazarı', 'malatya', 'kahramanmaraş', 'van', 'batman', 'elazığ', 'sivas', 'manisa', 'gebze', 'tarsus', 'kocaeli', 'balıkesir', 'erzurum', 'aydın', 'trabzon', 'hatay', 'sakarya', 'kütahya', 'muğla', 'tekirdağ', 'edirne', 'aksaray'];
+
+        // Pakistan şehirleri
+        const pakistanCities = ['karachi', 'lahore', 'islamabad', 'rawalpindi', 'faisalabad', 'multan', 'peshawar', 'quetta', 'sialkot', 'gujranwala'];
+
+        // Endonezya şehirleri
+        const indonesiaCities = ['jakarta', 'surabaya', 'bandung', 'medan', 'semarang', 'makassar', 'palembang', 'tangerang', 'depok', 'bekasi'];
+
+        // Malezya şehirleri
+        const malaysiaCities = ['kuala lumpur', 'george town', 'johor bahru', 'ipoh', 'shah alam', 'petaling jaya', 'kuching', 'kota kinabalu'];
+
+        // Körfez ülkeleri
+        const gulfCities = ['dubai', 'abu dhabi', 'riyadh', 'jeddah', 'mecca', 'medina', 'doha', 'kuwait', 'manama', 'muscat', 'sharjah'];
+
+        // Mısır şehirleri
+        const egyptCities = ['cairo', 'alexandria', 'giza', 'shubra', 'port said', 'suez', 'luxor', 'aswan'];
+
+        // İran şehirleri
+        const iranCities = ['tehran', 'mashhad', 'isfahan', 'karaj', 'shiraz', 'tabriz', 'qom', 'ahvaz'];
+
+        // Kuzey Avrupa (yüksek enlem)
+        const northernEuropeCities = ['london', 'manchester', 'birmingham', 'berlin', 'hamburg', 'munich', 'köln', 'frankfurt', 'amsterdam', 'rotterdam', 'brussels', 'paris', 'lyon', 'stockholm', 'oslo', 'copenhagen', 'helsinki', 'warsaw', 'vienna', 'zurich', 'geneva'];
+
+        // Fransa şehirleri
+        const franceCities = ['paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'strasbourg', 'montpellier', 'bordeaux', 'lille'];
+
+        // Singapur
+        const singaporeCities = ['singapore'];
+
+        // Rusya şehirleri
+        const russiaCities = ['moscow', 'saint petersburg', 'kazan', 'ufa', 'nizhny novgorod', 'samara'];
+
+        // Amerika şehirleri
+        const americaCities = ['new york', 'los angeles', 'chicago', 'houston', 'phoenix', 'philadelphia', 'san antonio', 'san diego', 'dallas', 'san jose', 'detroit', 'dearborn'];
+
+        // Öneri belirleme
+        if (turkishCities.some(c => city.includes(c))) {
+            return { method: '13', school: '0', region: 'turkey', note: t('recommendNote.turkey') };
+        }
+        if (pakistanCities.some(c => city.includes(c))) {
+            return { method: '1', school: '1', region: 'pakistan', note: t('recommendNote.pakistan') };
+        }
+        if (indonesiaCities.some(c => city.includes(c))) {
+            return { method: '20', school: '0', region: 'indonesia', note: t('recommendNote.indonesia') };
+        }
+        if (malaysiaCities.some(c => city.includes(c))) {
+            return { method: '17', school: '0', region: 'malaysia', note: t('recommendNote.malaysia') };
+        }
+        if (gulfCities.some(c => city.includes(c))) {
+            return { method: '4', school: '0', region: 'gulf', note: t('recommendNote.gulf') };
+        }
+        if (egyptCities.some(c => city.includes(c))) {
+            return { method: '5', school: '0', region: 'egypt', note: t('recommendNote.egypt') };
+        }
+        if (iranCities.some(c => city.includes(c))) {
+            return { method: '7', school: '0', region: 'iran', note: t('recommendNote.iran') };
+        }
+        if (franceCities.some(c => city.includes(c))) {
+            return { method: '12', school: '0', region: 'france', note: t('recommendNote.france') };
+        }
+        if (singaporeCities.some(c => city.includes(c))) {
+            return { method: '11', school: '0', region: 'singapore', note: t('recommendNote.singapore') };
+        }
+        if (russiaCities.some(c => city.includes(c))) {
+            return { method: '14', school: '1', region: 'russia', note: t('recommendNote.russia') };
+        }
+        if (americaCities.some(c => city.includes(c))) {
+            return { method: '2', school: '1', region: 'america', note: t('recommendNote.america') };
+        }
+        if (northernEuropeCities.some(c => city.includes(c))) {
+            return { method: '3', school: '1', region: 'europe', note: t('recommendNote.europe') };
+        }
+
+        // Varsayılan - MWL (global)
+        return { method: '3', school: '1', region: 'global', note: t('recommendNote.global') };
+    };
+
+    const recommendation = getRecommendation();
+    const isUsingRecommended = calculationMethod === recommendation.method;
+
+    // Önerilen ayarları uygula
+    const applyRecommendedSettings = () => {
+        setCalculationMethod(recommendation.method);
+        // Diyanet için school otomatik ayarlanıyor (HomeScreen'de)
+        if (recommendation.method !== '13') {
+            setAsrSchool(recommendation.school);
+        }
+    };
 
     const handleResetLocation = async () => {
         try {
@@ -102,7 +197,7 @@ export default function SettingsScreen({ navigation }: any) {
                 routes: [{ name: 'Home' }],
             });
         } catch (e) {
-
+            console.error(e);
         }
     };
 
@@ -130,7 +225,9 @@ export default function SettingsScreen({ navigation }: any) {
                 <View style={styles.settingItem}>
                     <View style={styles.settingInfo}>
                         <Text style={styles.settingLabel}>{t('locationFound')}</Text>
-                        <Text style={styles.settingDesc}>{t('locationDefault')}</Text>
+                        <Text style={styles.settingDesc}>
+                            {userCity ? `📍 ${userCity}` : t('locationDefault')}
+                        </Text>
                     </View>
                     <TouchableOpacity
                         style={styles.resetBtn}
@@ -139,6 +236,28 @@ export default function SettingsScreen({ navigation }: any) {
                         <Text style={styles.resetBtnText}>{t('resetBtn')}</Text>
                     </TouchableOpacity>
                 </View>
+
+                {/* Akıllı Öneri Kartı */}
+                {userCity && (
+                    <View style={styles.recommendationCard}>
+                        <View style={styles.recommendationHeader}>
+                            <Ionicons name="bulb" size={20} color={Colors.primary} />
+                            <Text style={styles.recommendationTitle}>{t('recommendTitle')}</Text>
+                        </View>
+                        <Text style={styles.recommendationNote}>{recommendation.note}</Text>
+                        {!isUsingRecommended && (
+                            <TouchableOpacity style={styles.applyRecommendedBtn} onPress={applyRecommendedSettings}>
+                                <Text style={styles.applyRecommendedText}>{t('applyRecommended')}</Text>
+                            </TouchableOpacity>
+                        )}
+                        {isUsingRecommended && (
+                            <View style={styles.usingRecommendedBadge}>
+                                <Ionicons name="checkmark-circle" size={16} color="#4CAF50" />
+                                <Text style={styles.usingRecommendedText}>{t('usingRecommended')}</Text>
+                            </View>
+                        )}
+                    </View>
+                )}
 
                 {/* Calculation Method Selector */}
                 <View style={styles.settingItem}>
@@ -155,50 +274,73 @@ export default function SettingsScreen({ navigation }: any) {
                     </TouchableOpacity>
                 </View>
 
-                {/* Asr School Selector (Hanefi/Şafi) */}
-                <View style={styles.settingItem}>
-                    <View style={styles.settingInfo}>
-                        <Text style={styles.settingLabel}>{t('asrSchoolLabel')}</Text>
-                        <Text style={styles.settingDesc}>{t('asrSchoolDesc')}</Text>
+                {/* Gelişmiş Ayarlar Toggle */}
+                <TouchableOpacity
+                    style={styles.advancedToggle}
+                    onPress={() => setShowAdvancedSettings(!showAdvancedSettings)}
+                >
+                    <View style={styles.advancedToggleLeft}>
+                        <Ionicons name="settings-outline" size={18} color="#888" />
+                        <Text style={styles.advancedToggleText}>{t('advancedSettings')}</Text>
                     </View>
-                    <TouchableOpacity
-                        style={styles.methodSelector}
-                        onPress={() => setShowAsrSchoolModal(true)}
-                    >
-                        <Text style={styles.methodText} numberOfLines={1}>{currentAsrSchoolLabel}</Text>
-                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
-                    </TouchableOpacity>
-                </View>
+                    <Ionicons
+                        name={showAdvancedSettings ? "chevron-up" : "chevron-down"}
+                        size={18}
+                        color="#888"
+                    />
+                </TouchableOpacity>
 
-                {/* High Latitude Method Selector */}
-                <View style={styles.settingItem}>
-                    <View style={styles.settingInfo}>
-                        <Text style={styles.settingLabel}>{t('highLatLabel')}</Text>
-                        <Text style={styles.settingDesc}>{t('highLatDesc')}</Text>
-                    </View>
-                    <TouchableOpacity
-                        style={styles.methodSelector}
-                        onPress={() => setShowHighLatModal(true)}
-                    >
-                        <Text style={styles.methodText} numberOfLines={1}>{currentHighLatLabel}</Text>
-                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
-                    </TouchableOpacity>
-                </View>
+                {/* Gelişmiş Ayarlar - Açılır Bölüm */}
+                {showAdvancedSettings && (
+                    <View style={styles.advancedSection}>
+                        <Text style={styles.advancedHint}>{t('advancedHint')}</Text>
 
-                {/* Midnight Mode Selector */}
-                <View style={styles.settingItem}>
-                    <View style={styles.settingInfo}>
-                        <Text style={styles.settingLabel}>{t('midnightLabel')}</Text>
-                        <Text style={styles.settingDesc}>{t('midnightDesc')}</Text>
+                        {/* Asr School Selector (Hanefi/Şafi) */}
+                        <View style={styles.settingItem}>
+                            <View style={styles.settingInfo}>
+                                <Text style={styles.settingLabel}>{t('asrSchoolLabel')}</Text>
+                                <Text style={styles.settingDesc}>{t('asrSchoolDesc')}</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.methodSelector}
+                                onPress={() => setShowAsrSchoolModal(true)}
+                            >
+                                <Text style={styles.methodText} numberOfLines={1}>{currentAsrSchoolLabel}</Text>
+                                <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* High Latitude Method Selector */}
+                        <View style={styles.settingItem}>
+                            <View style={styles.settingInfo}>
+                                <Text style={styles.settingLabel}>{t('highLatLabel')}</Text>
+                                <Text style={styles.settingDesc}>{t('highLatDesc')}</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.methodSelector}
+                                onPress={() => setShowHighLatModal(true)}
+                            >
+                                <Text style={styles.methodText} numberOfLines={1}>{currentHighLatLabel}</Text>
+                                <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* Midnight Mode Selector */}
+                        <View style={styles.settingItem}>
+                            <View style={styles.settingInfo}>
+                                <Text style={styles.settingLabel}>{t('midnightLabel')}</Text>
+                                <Text style={styles.settingDesc}>{t('midnightDesc')}</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.methodSelector}
+                                onPress={() => setShowMidnightModal(true)}
+                            >
+                                <Text style={styles.methodText} numberOfLines={1}>{currentMidnightLabel}</Text>
+                                <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                    <TouchableOpacity
-                        style={styles.methodSelector}
-                        onPress={() => setShowMidnightModal(true)}
-                    >
-                        <Text style={styles.methodText} numberOfLines={1}>{currentMidnightLabel}</Text>
-                        <Ionicons name="chevron-forward" size={16} color={Colors.primary} />
-                    </TouchableOpacity>
-                </View>
+                )}
 
                 {/* Sound Toggle */}
                 <View style={styles.settingItem}>
@@ -263,7 +405,7 @@ export default function SettingsScreen({ navigation }: any) {
                 </View>
 
                 {/* Version */}
-                <Text style={styles.version}>Ramazan 2026 v1.3.3 (Build 20)</Text>
+                <Text style={styles.version}>Ramazan 2026 v1.4.1 (Build 18)</Text>
             </ScrollView>
 
             {/* Calculation Method Modal */}
@@ -282,8 +424,8 @@ export default function SettingsScreen({ navigation }: any) {
                                     onPress={() => {
                                         setCalculationMethod(method.id);
                                         setShowMethodModal(false);
-                                        // Optional: Trigger a reload or notify user that changes will apply on next refresh
-                                        handleResetLocation(); // Force reload to apply new timings immediately
+                                        // Ayarlar otomatik olarak AppContext üzerinden uygulanacak
+                                        // HomeScreen useEffect'i calculationMethod değişikliğini dinliyor
                                     }}
                                 >
                                     <Text style={[
@@ -375,7 +517,7 @@ export default function SettingsScreen({ navigation }: any) {
                                     onPress={() => {
                                         setAsrSchool(school.id);
                                         setShowAsrSchoolModal(false);
-                                        handleResetLocation();
+                                        // Ayarlar otomatik olarak AppContext üzerinden uygulanacak
                                     }}
                                 >
                                     <Text style={[
@@ -413,7 +555,7 @@ export default function SettingsScreen({ navigation }: any) {
                                     onPress={() => {
                                         setHighLatitudeMethod(method.id);
                                         setShowHighLatModal(false);
-                                        handleResetLocation();
+                                        // Ayarlar otomatik olarak AppContext üzerinden uygulanacak
                                     }}
                                 >
                                     <Text style={[
@@ -451,7 +593,7 @@ export default function SettingsScreen({ navigation }: any) {
                                     onPress={() => {
                                         setMidnightMode(mode.id);
                                         setShowMidnightModal(false);
-                                        handleResetLocation();
+                                        // Ayarlar otomatik olarak AppContext üzerinden uygulanacak
                                     }}
                                 >
                                     <Text style={[
@@ -572,18 +714,84 @@ const styles = StyleSheet.create({
     methodOptionText: { color: '#ccc', fontSize: 14 },
     methodOptionTextActive: { color: Colors.primary, fontWeight: 'bold' },
 
-    // New Adjustment Styles
-    adjustmentRow: {
+    // Öneri Kartı
+    recommendationCard: {
+        backgroundColor: 'rgba(197, 160, 89, 0.1)',
+        borderWidth: 1,
+        borderColor: 'rgba(197, 160, 89, 0.3)',
+        borderRadius: 12,
+        padding: 16,
+        marginBottom: 16,
+    },
+    recommendationHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 8,
+    },
+    recommendationTitle: {
+        color: Colors.primary,
+        fontSize: 14,
+        fontWeight: 'bold',
+    },
+    recommendationNote: {
+        color: '#ccc',
+        fontSize: 13,
+        lineHeight: 20,
+        marginBottom: 12,
+    },
+    applyRecommendedBtn: {
+        backgroundColor: Colors.primary,
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    applyRecommendedText: {
+        color: '#000',
+        fontSize: 13,
+        fontWeight: 'bold',
+    },
+    usingRecommendedBadge: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    usingRecommendedText: {
+        color: '#4CAF50',
+        fontSize: 13,
+    },
+
+    // Gelişmiş Ayarlar
+    advancedToggle: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#333',
-        width: '100%'
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 12,
     },
-    adjLabel: { color: '#ddd', fontSize: 16, flex: 1 },
-    adjControls: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-    adjBtn: { backgroundColor: '#333', borderRadius: 20, width: 36, height: 36, justifyContent: 'center', alignItems: 'center' },
-    adjValue: { color: '#fff', fontSize: 16, fontWeight: 'bold', width: 60, textAlign: 'center' }
+    advancedToggleLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    advancedToggleText: {
+        color: '#888',
+        fontSize: 14,
+    },
+    advancedSection: {
+        backgroundColor: 'rgba(0, 0, 0, 0.15)',
+        borderRadius: 12,
+        padding: 12,
+        marginBottom: 12,
+    },
+    advancedHint: {
+        color: '#666',
+        fontSize: 11,
+        fontStyle: 'italic',
+        marginBottom: 12,
+        textAlign: 'center',
+    },
 });

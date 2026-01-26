@@ -99,21 +99,21 @@
         "0": "Shia Ithna-Ashari (Qum)"
     },
     "asrSchoolLabel": "Asr Calculation School",
-    "asrSchoolDesc": "Method for Asr prayer time calculation",
+    "asrSchoolDesc": "Hanafi: shadow 2x | Shafi: shadow 1x object height",
     "schools": {
-        "hanafi": "Hanafi",
+        "hanafi": "Hanafi (Turkey, Pakistan)",
         "shafi": "Shafi'i / Maliki / Hanbali"
     },
     "highLatLabel": "High Latitude Adjustment",
-    "highLatDesc": "Special calculation for 48°+ latitudes",
+    "highLatDesc": "For northern countries (Scandinavia, UK, N. Germany)",
     "highLat": {
         "auto": "Automatic (Recommended)",
-        "middleNight": "Middle of the Night",
-        "oneSeventh": "One Seventh",
-        "angleBased": "Angle Based"
+        "middleNight": "Middle of Night (48°+)",
+        "oneSeventh": "One Seventh (55°+)",
+        "angleBased": "Angle Based (65°+)"
     },
     "midnightLabel": "Midnight Calculation",
-    "midnightDesc": "Islamic midnight calculation method",
+    "midnightDesc": "Isha/Tahajjud time calculation method",
     "midnight": {
         "standard": "Standard (Sunni)",
         "jafari": "Jafari (Shia)"
@@ -136,6 +136,24 @@
     "alertBodySahur": "Sahur time! Prepare for fasting.",
     "close": "CLOSE",
     "dailyHadith": "Daily Hadith",
-    "timeAdjustmentTitle": "Time Adjustment",
-    "timeAdjustmentDesc": "Add/subtract safety margin (Min)"
+    "recommendTitle": "Recommended for You",
+    "applyRecommended": "Apply Recommended Settings",
+    "usingRecommended": "Using recommended settings",
+    "advancedSettings": "Advanced Settings",
+    "advancedHint": "These settings can remain at default values for most users.",
+    "recommendNote": {
+        "turkey": "Diyanet (Turkish Religious Affairs) calculation is recommended for Turkey. Shafi method is automatically used for Asr time.",
+        "pakistan": "University of Karachi calculation with Hanafi school is recommended for Pakistan.",
+        "indonesia": "Kemenag (Ministry of Religious Affairs) calculation is recommended for Indonesia.",
+        "malaysia": "JAKIM calculation is recommended for Malaysia.",
+        "gulf": "Umm al-Qura (Makkah) calculation is recommended for Gulf countries.",
+        "egypt": "Egyptian General Authority calculation is recommended for Egypt and Africa.",
+        "iran": "Tehran Geophysics Institute calculation is recommended for Iran.",
+        "france": "UOIF calculation is recommended for France.",
+        "singapore": "MUIS calculation is recommended for Singapore.",
+        "russia": "Russia Muslims calculation is recommended for Russia.",
+        "america": "ISNA calculation is recommended for North America.",
+        "europe": "Muslim World League calculation is recommended for Europe.",
+        "global": "Muslim World League (Global) calculation is recommended for your location."
+    }
 }

@@ -99,21 +99,21 @@
         "0": "Schia Ithna-Ashari (Qum)"
     },
     "asrSchoolLabel": "Asr-Berechnungsschule",
-    "asrSchoolDesc": "Methode zur Berechnung der Asr-Gebetszeit",
+    "asrSchoolDesc": "Hanafi: Schatten 2× | Schafi: Schatten 1× Objekthöhe",
     "schools": {
-        "hanafi": "Hanafi",
+        "hanafi": "Hanafi (Türkei, Pakistan)",
         "shafi": "Schafi'i / Maliki / Hanbali"
     },
     "highLatLabel": "Hohe Breitenanpassung",
-    "highLatDesc": "Spezielle Berechnung für 48°+ Breitengrade",
+    "highLatDesc": "Für nördliche Länder (Skandinavien, UK, Nord-Deutschland)",
     "highLat": {
         "auto": "Automatisch (Empfohlen)",
-        "middleNight": "Mitte der Nacht",
-        "oneSeventh": "Ein Siebtel",
-        "angleBased": "Winkelbasiert"
+        "middleNight": "Mitte der Nacht (48°+)",
+        "oneSeventh": "Ein Siebtel (55°+)",
+        "angleBased": "Winkelbasiert (65°+)"
     },
     "midnightLabel": "Mitternachtsberechnung",
-    "midnightDesc": "Islamische Mitternachtsberechnungsmethode",
+    "midnightDesc": "Berechnung für Isha/Tahajjud Zeit",
     "midnight": {
         "standard": "Standard (Sunni)",
         "jafari": "Jafari (Schia)"
@@ -135,5 +135,25 @@
     "alertBodyPrayer": "Die Gebetszeit ist eingetreten. Möge Allah annehmen.",
     "alertBodySahur": "Sahur Zeit! Bereiten Sie sich auf das Fasten vor.",
     "close": "SCHLIESSEN",
-    "dailyHadith": "Hadith des Tages"
+    "dailyHadith": "Hadith des Tages",
+    "recommendTitle": "Für Sie empfohlen",
+    "applyRecommended": "Empfohlene Einstellungen anwenden",
+    "usingRecommended": "Empfohlene Einstellungen werden verwendet",
+    "advancedSettings": "Erweiterte Einstellungen",
+    "advancedHint": "Diese Einstellungen können für die meisten Benutzer auf den Standardwerten bleiben.",
+    "recommendNote": {
+        "turkey": "Diyanet (Türkische Religionsbehörde) wird für die Türkei empfohlen. Die Schafi-Methode wird automatisch für die Asr-Zeit verwendet.",
+        "pakistan": "Universität Karachi mit der Hanafi-Schule wird für Pakistan empfohlen.",
+        "indonesia": "Kemenag (Religionsministerium) wird für Indonesien empfohlen.",
+        "malaysia": "JAKIM wird für Malaysia empfohlen.",
+        "gulf": "Umm al-Qura (Mekka) wird für Golfstaaten empfohlen.",
+        "egypt": "Ägyptische Generalbehörde wird für Ägypten und Afrika empfohlen.",
+        "iran": "Teheran Geophysik Institut wird für Iran empfohlen.",
+        "france": "UOIF wird für Frankreich empfohlen.",
+        "singapore": "MUIS wird für Singapur empfohlen.",
+        "russia": "Russische Muslime wird für Russland empfohlen.",
+        "america": "ISNA wird für Nordamerika empfohlen.",
+        "europe": "Muslim World League wird für Europa empfohlen.",
+        "global": "Muslim World League (Global) wird für Ihren Standort empfohlen."
+    }
 }
