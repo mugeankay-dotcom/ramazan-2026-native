@@ -19,6 +19,8 @@ interface AppContextType {
     addToHistory: (count: number) => void;
     userLocation: { lat: number; lng: number } | null;
     setUserLocation: (loc: { lat: number; lng: number } | null) => void;
+    userCity: string;
+    setUserCity: (city: string) => void;
     calculationMethod: string;
     setCalculationMethod: (method: string) => void;
     asrSchool: string;
@@ -40,7 +42,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const [showLanguageModal, setShowLanguageModal] = useState(false);
     const [dhikrCount, setDhikrCountState] = useState(0);
     const [dhikrHistory, setDhikrHistoryState] = useState<{ [date: string]: number }>({});
-    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [userLocation, setUserLocationState] = useState<{ lat: number; lng: number } | null>(null);
+    const [userCity, setUserCityState] = useState('');
     const [calculationMethod, setCalculationMethodState] = useState('13'); // Default: Diyanet (13)
     const [asrSchool, setAsrSchoolState] = useState('1'); // Default: Hanafi (1), Shafi (0)
     const [highLatitudeMethod, setHighLatitudeMethodState] = useState('0'); // Default: Auto (0)
@@ -61,6 +64,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             const savedAsrSchool = await AsyncStorage.getItem('asrSchool');
             const savedHighLatMethod = await AsyncStorage.getItem('highLatitudeMethod');
             const savedMidnightMode = await AsyncStorage.getItem('midnightMode');
+            const savedCity = await AsyncStorage.getItem('userCity');
 
             if (savedLang) {
                 setLanguageState(savedLang);
@@ -78,6 +82,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             if (savedAsrSchool) setAsrSchoolState(savedAsrSchool);
             if (savedHighLatMethod) setHighLatitudeMethodState(savedHighLatMethod);
             if (savedMidnightMode) setMidnightModeState(savedMidnightMode);
+            if (savedCity) setUserCityState(savedCity);
         } catch (e) {
             console.error('Error loading preferences:', e);
             setShowLanguageModal(true);
@@ -111,6 +116,18 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     const setMidnightMode = async (mode: string) => {
         setMidnightModeState(mode);
         await AsyncStorage.setItem('midnightMode', mode);
+    };
+
+    const setUserLocation = async (loc: { lat: number; lng: number } | null) => {
+        setUserLocationState(loc);
+        if (loc) {
+            await AsyncStorage.setItem('userLocation', JSON.stringify(loc));
+        }
+    };
+
+    const setUserCity = async (city: string) => {
+        setUserCityState(city);
+        await AsyncStorage.setItem('userCity', city);
     };
 
     const setSoundEnabled = async (enabled: boolean) => {
@@ -164,6 +181,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
                 addToHistory,
                 userLocation,
                 setUserLocation,
+                userCity,
+                setUserCity,
                 calculationMethod,
                 setCalculationMethod,
                 asrSchool,

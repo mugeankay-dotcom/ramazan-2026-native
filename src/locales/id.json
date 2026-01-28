@@ -99,21 +99,21 @@
         "0": "Syiah Itsna Asyari (Qom)"
     },
     "asrSchoolLabel": "Mazhab Perhitungan Ashar",
-    "asrSchoolDesc": "Metode perhitungan waktu salat Ashar",
+    "asrSchoolDesc": "Hanafi: bayangan 2× | Syafi: bayangan 1× tinggi benda",
     "schools": {
-        "hanafi": "Hanafi",
+        "hanafi": "Hanafi (Turki, Pakistan)",
         "shafi": "Syafi'i / Maliki / Hanbali"
     },
     "highLatLabel": "Penyesuaian Lintang Tinggi",
-    "highLatDesc": "Perhitungan khusus untuk lintang 48°+",
+    "highLatDesc": "Untuk negara utara (Skandinavia, UK, Jerman Utara)",
     "highLat": {
         "auto": "Otomatis (Direkomendasikan)",
-        "middleNight": "Tengah Malam",
-        "oneSeventh": "Sepertujuh",
-        "angleBased": "Berbasis Sudut"
+        "middleNight": "Tengah Malam (48°+)",
+        "oneSeventh": "Sepertujuh (55°+)",
+        "angleBased": "Berbasis Sudut (65°+)"
     },
     "midnightLabel": "Perhitungan Tengah Malam",
-    "midnightDesc": "Metode perhitungan tengah malam Islami",
+    "midnightDesc": "Metode perhitungan waktu Isya/Tahajud",
     "midnight": {
         "standard": "Standar (Sunni)",
         "jafari": "Jafari (Syiah)"
@@ -135,5 +135,25 @@
     "alertBodyPrayer": "Waktu salat telah tiba. Semoga Allah menerima.",
     "alertBodySahur": "Waktu sahur! Bersiaplah untuk berpuasa.",
     "close": "TUTUP",
-    "dailyHadith": "Hadis Hari Ini"
+    "dailyHadith": "Hadis Hari Ini",
+    "recommendTitle": "Direkomendasikan untuk Anda",
+    "applyRecommended": "Terapkan Pengaturan yang Direkomendasikan",
+    "usingRecommended": "Menggunakan pengaturan yang direkomendasikan",
+    "advancedSettings": "Pengaturan Lanjutan",
+    "advancedHint": "Pengaturan ini dapat tetap pada nilai default untuk sebagian besar pengguna.",
+    "recommendNote": {
+        "turkey": "Perhitungan Diyanet (Urusan Agama Turki) direkomendasikan untuk Turki. Metode Syafi otomatis digunakan untuk waktu Ashar.",
+        "pakistan": "Perhitungan Universitas Karachi dengan mazhab Hanafi direkomendasikan untuk Pakistan.",
+        "indonesia": "Perhitungan Kemenag (Kementerian Agama) direkomendasikan untuk Indonesia.",
+        "malaysia": "Perhitungan JAKIM direkomendasikan untuk Malaysia.",
+        "gulf": "Perhitungan Umm al-Qura (Makkah) direkomendasikan untuk negara-negara Teluk.",
+        "egypt": "Perhitungan Otoritas Umum Mesir direkomendasikan untuk Mesir dan Afrika.",
+        "iran": "Perhitungan Institut Geofisika Tehran direkomendasikan untuk Iran.",
+        "france": "Perhitungan UOIF direkomendasikan untuk Prancis.",
+        "singapore": "Perhitungan MUIS direkomendasikan untuk Singapura.",
+        "russia": "Perhitungan Muslim Rusia direkomendasikan untuk Rusia.",
+        "america": "Perhitungan ISNA direkomendasikan untuk Amerika Utara.",
+        "europe": "Perhitungan Liga Dunia Muslim direkomendasikan untuk Eropa.",
+        "global": "Perhitungan Liga Dunia Muslim (Global) direkomendasikan untuk lokasi Anda."
+    }
 }

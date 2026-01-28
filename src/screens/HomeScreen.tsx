@@ -46,7 +46,7 @@ const API_URL = 'https://api.aladhan.com/v1/calendar';
 
 export default function HomeScreen({ navigation }: any) {
     const insets = useSafeAreaInsets();
-    const { userLocation, setUserLocation, soundEnabled, vibrationEnabled, language, calculationMethod, asrSchool, highLatitudeMethod, midnightMode } = useApp();
+    const { userLocation, setUserLocation, userCity, setUserCity, soundEnabled, vibrationEnabled, language, calculationMethod, asrSchool, highLatitudeMethod, midnightMode } = useApp();
 
     // Yüksek enlem hesaplama metodu belirleme
     const getHighLatitudeMethod = (latitude: number): number | null => {
@@ -79,8 +79,6 @@ export default function HomeScreen({ navigation }: any) {
     // Iftar Warning Modal
     const [showIftarAlert, setShowIftarAlert] = useState(false);
 
-    // Daily Hadith Modal - shows on app open
-    const [showHadithModal, setShowHadithModal] = useState(true);
 
     // Track alerts to avoid double triggering
     const triggeredAlerts = useRef<Set<string>>(new Set());
@@ -94,14 +92,34 @@ export default function HomeScreen({ navigation }: any) {
     useEffect(() => {
         setupNotifications();
         fetchLocation();
-
-        // Main Timer Loop (Every 1 second)
-        const timer = setInterval(() => {
-            updateLogic();
-        }, 1000);
-
-        return () => clearInterval(timer);
     }, []);
+
+    // Countdown timer - her saniye güncellenir
+    useEffect(() => {
+        const timer = setInterval(() => {
+            updateCountdown();
+        }, 1000);
+        return () => clearInterval(timer);
+    }, [todayPrayers]);
+
+    // Prayer alert checker - her dakika kontrol eder
+    useEffect(() => {
+        if (!todayPrayers) return;
+
+        // İlk yüklemede hemen kontrol et
+        const now = new Date();
+        const isRamadan = now >= RAMADAN_START;
+        checkPrayerAlerts(todayPrayers, now, isRamadan);
+
+        // Her dakika başında kontrol et (daha verimli)
+        const alertTimer = setInterval(() => {
+            const currentTime = new Date();
+            const isRamadanNow = currentTime >= RAMADAN_START;
+            checkPrayerAlerts(todayPrayers, currentTime, isRamadanNow);
+        }, 30000); // 30 saniyede bir kontrol et (1 dakikalık pencereyi kaçırmamak için)
+
+        return () => clearInterval(alertTimer);
+    }, [todayPrayers, soundEnabled, vibrationEnabled]);
 
     useEffect(() => {
         if (userLocation) {
@@ -133,6 +151,8 @@ export default function HomeScreen({ navigation }: any) {
                     });
                     if (address) {
                         locationName = address.city || address.district || address.subregion || 'Bilinmeyen';
+                        // Şehir adını global state'e kaydet (ayarlarda göstermek için)
+                        setUserCity(locationName);
                     }
                 } catch (e) {
                     console.log('Reverse geocode error:', e);
@@ -312,9 +332,14 @@ export default function HomeScreen({ navigation }: any) {
                 params.append('latitudeAdjustmentMethod', highLatMethod.toString());
             }
 
-            // Apply Temkin/Calibration ONLY for Diyanet (Method 13)
+            // Diyanet için özel ayarlar (Method 13)
+            // DİKKAT: Diyanet İşleri Başkanlığı, ikindi vakti için Şafi metodunu kullanır
+            // Bu yüzden Diyanet seçildiğinde school parametresini 0 (Şafi) yapıyoruz
             if (calculationMethod === '13') {
-                params.append('tune', "10,10,0,-1,1,-1,-1,-1,0");
+                // Sadece İmsak için +10 dakika temkin süresi
+                params.append('tune', "10,0,0,0,0,0,0,0,0");
+                // Diyanet için Şafi okulu zorla (ikindi vakti için)
+                params.set('school', '0');
             }
 
             // Timezone otomatik algılama
@@ -374,16 +399,16 @@ export default function HomeScreen({ navigation }: any) {
         }
     };
 
-    // --- CORE LOGIC: COUNTDOWN & ALERTS ---
-    const updateLogic = (prayers = todayPrayers) => {
+    // --- CORE LOGIC: COUNTDOWN (Sadece geri sayım) ---
+    const updateCountdown = () => {
         const now = new Date();
+        const prayers = todayPrayers;
 
         // 1. Check Pre-Ramadan
         if (now < RAMADAN_START) {
             setCountdownLabel('countdownPreRamadan');
             setCountdownTargetName('ramadanYear');
             updateCountdownState(RAMADAN_START, now);
-            checkPrayerAlerts(prayers, now, false); // Prayer alerts work, but Iftar modal disabled before Ramadan
             return;
         }
 
@@ -391,11 +416,7 @@ export default function HomeScreen({ navigation }: any) {
 
         // Parse Times
         const imsakTime = parseTime(prayers.Imsak);
-        const gunesTime = parseTime(prayers.Sunrise);
-        const ogleTime = parseTime(prayers.Dhuhr);
-        const ikindiTime = parseTime(prayers.Asr);
         const aksamTime = parseTime(prayers.Maghrib); // IFTAR
-        const yatsiTime = parseTime(prayers.Isha);
 
         // 2. Determine Phase
         let targetTime: Date;
@@ -423,9 +444,46 @@ export default function HomeScreen({ navigation }: any) {
         setCountdownLabel(label);
         setCountdownTargetName(targetName);
         updateCountdownState(targetTime, now);
+    };
 
-        // 3. Check Alerts (Dhuhr, Asr, Maghrib, Isha)
-        checkPrayerAlerts(prayers, now, true); // During Ramadan, enable Iftar modal
+    // Legacy function for initial load (called from fetchTodayPrayers)
+    const updateLogic = (prayers: any) => {
+        if (!prayers) return;
+        // Just update countdown - alerts are handled by separate useEffect
+        const now = new Date();
+
+        if (now < RAMADAN_START) {
+            setCountdownLabel('countdownPreRamadan');
+            setCountdownTargetName('ramadanYear');
+            updateCountdownState(RAMADAN_START, now);
+            return;
+        }
+
+        const imsakTime = parseTime(prayers.Imsak);
+        const aksamTime = parseTime(prayers.Maghrib);
+
+        let targetTime: Date;
+        let label = "";
+        let targetName = "";
+
+        if (now < imsakTime) {
+            targetTime = imsakTime;
+            label = "countdownImsak";
+            targetName = "targetSahur";
+        } else if (now < aksamTime) {
+            targetTime = aksamTime;
+            label = "countdownIftar";
+            targetName = "targetIftar";
+        } else {
+            targetTime = new Date(imsakTime);
+            targetTime.setDate(targetTime.getDate() + 1);
+            label = "countdownTomorrowImsak";
+            targetName = "targetSahur";
+        }
+
+        setCountdownLabel(label);
+        setCountdownTargetName(targetName);
+        updateCountdownState(targetTime, now);
     };
 
     const updateCountdownState = (target: Date, now: Date) => {
@@ -459,7 +517,8 @@ export default function HomeScreen({ navigation }: any) {
             { id: 'Isha', nameKey: 'prayers.Isha', isIftar: false },
         ];
 
-        const todayKey = now.toDateString(); // "Sun Feb 18 2026"
+        // Tarih bazlı key - ayar değişse bile aynı gün için tekrar alert gelmemeli
+        const todayKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 
         checkList.forEach(p => {
             const timeStr = prayers[p.id];
@@ -474,12 +533,18 @@ export default function HomeScreen({ navigation }: any) {
             const diff = now.getTime() - time.getTime();
             const alertKey = `${todayKey}-${p.id}`;
 
-            // If within 1 minute (60000ms) after time and NOT triggered yet
-            // Added check: diff must be reasonably positive (e.g., > -1000) to act as a buffer
-            if (diff >= 0 && diff < 60000 && !triggeredAlerts.current.has(alertKey)) {
+            // CRITICAL FIX: Alert sadece tam vakit anında tetiklenmeli (0-60 saniye arası)
+            // VE daha önce tetiklenmemiş olmalı
+            // VE uygulama yeni açıldığında geçmiş vakitler için alert GELMEMELİ
 
+            // Eğer vakit 2 dakikadan fazla geçmişse (ayar değişikliği veya uygulama açılışı),
+            // bu eski bir vakit demektir - alert tetiklenmemeli
+            const MAX_ALERT_WINDOW = 60000; // 60 saniye - sadece bu pencerede alert ver
+            const isWithinAlertWindow = diff >= 0 && diff < MAX_ALERT_WINDOW;
+            const alreadyTriggered = triggeredAlerts.current.has(alertKey);
+
+            if (isWithinAlertWindow && !alreadyTriggered) {
                 // TRIGGER ALERT
-
                 triggeredAlerts.current.add(alertKey);
 
                 const prayerName = t(p.nameKey);
@@ -499,6 +564,10 @@ export default function HomeScreen({ navigation }: any) {
                 if (p.isIftar && isRamadan) {
                     setShowIftarAlert(true);
                 }
+            } else if (diff >= MAX_ALERT_WINDOW && !alreadyTriggered) {
+                // Vakit geçmiş ama triggeredAlerts'a eklenmemiş - ekle ki bir daha kontrol etmesin
+                // Bu sayede ayar değişikliğinde eski vakitler için alert gelmez
+                triggeredAlerts.current.add(alertKey);
             }
         });
     };
@@ -522,9 +591,10 @@ export default function HomeScreen({ navigation }: any) {
                 baseParams.append('latitudeAdjustmentMethod', highLatMethod.toString());
             }
 
-            // Diyanet için tune parametresi
+            // Diyanet için özel ayarlar (Method 13)
             if (calculationMethod === '13') {
-                baseParams.append('tune', "10,10,0,-1,1,-1,-1,-1,0");
+                baseParams.append('tune', "10,0,0,0,0,0,0,0,0");
+                baseParams.set('school', '0'); // Diyanet Şafi kullanır
             }
 
             // Timezone
@@ -550,22 +620,33 @@ export default function HomeScreen({ navigation }: any) {
             const ramadanData = [];
             const startIndex = allDays.findIndex(d => d.date.gregorian.date === "19-02-2026");
 
+            // Güvenli parse fonksiyonu - undefined veya hatalı değerler için
+            const safeParseTime = (timeStr: string | undefined): string => {
+                if (!timeStr || typeof timeStr !== 'string') return '--:--';
+                const parts = timeStr.split(' ');
+                return parts[0] || '--:--';
+            };
+
             if (startIndex !== -1) {
                 for (let i = 0; i < 29; i++) {
                     if (startIndex + i < allDays.length) {
                         const dayData = allDays[startIndex + i];
+                        const timings = dayData?.timings || {};
+                        const gregorian = dayData?.date?.gregorian || {};
+                        const hijri = dayData?.date?.hijri || {};
+
                         ramadanData.push({
                             day: i + 1,
-                            date: `${dayData.date.gregorian.day} ${dayData.date.gregorian.month.en.substring(0, 3).toUpperCase()}`,
-                            dayName: getDayName(dayData.date.gregorian.weekday.en),
-                            hijriDay: dayData.date.hijri.day,
-                            hijriYear: dayData.date.hijri.year,
-                            imsak: dayData.timings.Imsak.split(' ')[0],
-                            gunes: dayData.timings.Sunrise.split(' ')[0],
-                            ogle: dayData.timings.Dhuhr.split(' ')[0],
-                            ikindi: dayData.timings.Asr.split(' ')[0],
-                            iftar: dayData.timings.Maghrib.split(' ')[0],
-                            yatsi: dayData.timings.Isha.split(' ')[0]
+                            date: `${gregorian.day || '?'} ${(gregorian.month?.en || 'UNK').substring(0, 3).toUpperCase()}`,
+                            dayName: getDayName(gregorian.weekday?.en || ''),
+                            hijriDay: hijri.day || '?',
+                            hijriYear: hijri.year || '1447',
+                            imsak: safeParseTime(timings.Imsak),
+                            gunes: safeParseTime(timings.Sunrise),
+                            ogle: safeParseTime(timings.Dhuhr),
+                            ikindi: safeParseTime(timings.Asr),
+                            iftar: safeParseTime(timings.Maghrib),
+                            yatsi: safeParseTime(timings.Isha)
                         });
                     }
                 }
@@ -691,7 +772,7 @@ export default function HomeScreen({ navigation }: any) {
                             </View>
                         </View>
 
-                        {/* DAILY HADITH */}
+                        {/* DAILY HADITH - Sadece görüntüleme */}
                         {(() => {
                             const hadith = getDailyHadith(language);
                             return (
@@ -827,32 +908,6 @@ export default function HomeScreen({ navigation }: any) {
                 </View>
             </Modal>
 
-            {/* DAILY HADITH MODAL - Shows on app open */}
-            <Modal visible={showHadithModal} transparent animationType="fade" onRequestClose={() => setShowHadithModal(false)}>
-                <View style={styles.hadithModalOverlay}>
-                    <View style={styles.hadithModalContent}>
-                        <Ionicons name="book" size={50} color={GOLD_COLOR} />
-                        <Text style={styles.hadithModalLabel}>{t('dailyHadith')}</Text>
-
-                        {(() => {
-                            const hadith = getDailyHadith(language);
-                            return (
-                                <>
-                                    <Text style={styles.hadithModalText}>"{hadith.text}"</Text>
-                                    <Text style={styles.hadithModalSource}>
-                                        — Hz. Muhammed (s.a.v.) - {hadith.source}
-                                    </Text>
-                                </>
-                            );
-                        })()}
-
-                        <TouchableOpacity style={styles.hadithModalBtn} onPress={() => setShowHadithModal(false)}>
-                            <Text style={styles.hadithModalBtnText}>{t('close')}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-
             <AdBanner position="bottom" />
         </View>
     );
@@ -972,61 +1027,6 @@ const styles = StyleSheet.create({
         fontSize: 11,
         fontFamily: serifFont,
         textAlign: 'center',
-    },
-
-    // Hadith Modal (Full Screen)
-    hadithModalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.95)',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    hadithModalContent: {
-        width: '100%',
-        backgroundColor: 'rgba(10, 22, 40, 0.98)',
-        borderRadius: 24,
-        padding: 30,
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: GOLD_COLOR,
-    },
-    hadithModalLabel: {
-        color: GOLD_COLOR,
-        fontSize: 18,
-        fontFamily: serifBold,
-        letterSpacing: 2,
-        marginTop: 15,
-        marginBottom: 20,
-    },
-    hadithModalText: {
-        color: '#fff',
-        fontSize: 18,
-        fontFamily: serifFont,
-        fontStyle: 'italic',
-        textAlign: 'center',
-        lineHeight: 28,
-        marginBottom: 20,
-        paddingHorizontal: 10,
-    },
-    hadithModalSource: {
-        color: '#aaa',
-        fontSize: 13,
-        fontFamily: serifFont,
-        textAlign: 'center',
-        marginBottom: 30,
-    },
-    hadithModalBtn: {
-        backgroundColor: GOLD_COLOR,
-        paddingVertical: 14,
-        paddingHorizontal: 50,
-        borderRadius: 30,
-    },
-    hadithModalBtnText: {
-        color: '#000',
-        fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: serifFont,
     }
 });
 
