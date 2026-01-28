@@ -6,7 +6,7 @@
     "menuDhikr": "Zikirmatik",
     "menuQibla": "Kıble",
     "menuSettings": "Ayarlar",
-    "menuHolyDays": "Kandiller & Tatiller",
+    "menuHolidays": "Kandiller & Tatiller",
     "prayersTitle": "Dualar",
     "nextEventLabel": "19 Şubat 2026 - Ramazan Başlangıcına Kalan Süre",
     "loading": "Yükleniyor...",
@@ -187,5 +187,14 @@
     },
     "daysRemaining": "gün kaldı",
     "daysPassed": "gün önce",
-    "today": "BUGÜN"
+    "holidaysTitle": "2026 Kandiller & Tatiller",
+    "kandilSection": "Mübarek Geceler",
+    "holidaySection": "Resmi Tatiller",
+    "kandilAlert": "Kandil Hatırlatması",
+    "kandilToday": "Bugün %{name}! Hayırlı kandiller.",
+    "kandilSoon": "%{name}'e %{days} gün kaldı.",
+    "kandilTomorrow": "Yarın %{name}! Hazırlıklı olun.",
+    "daysLeft": "gün kaldı",
+    "today": "Bugün",
+    "passed": "Geçti"
 }

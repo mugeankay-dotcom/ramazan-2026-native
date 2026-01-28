@@ -828,9 +828,9 @@ export default function HomeScreen({ navigation }: any) {
                             <Ionicons name="compass" size={20} color="#fff" />
                             <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('HolyDays')}>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Holidays')}>
                             <Ionicons name="calendar" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>{t('menuHolyDays')}</Text>
+                            <Text style={styles.menuItemText}>{t('menuHolidays')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Settings')}>
                             <Ionicons name="settings-outline" size={20} color="#fff" />

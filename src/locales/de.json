@@ -6,7 +6,7 @@
     "menuDhikr": "Dhikr-Zähler",
     "menuQibla": "Qibla",
     "menuSettings": "Einstellungen",
-    "menuHolyDays": "Heilige Nächte & Feiertage",
+    "menuHolidays": "Feiertage & Heilige Nächte",
     "prayersTitle": "Gebete",
     "nextEventLabel": "19. Februar 2026 - Zeit bis Ramadan beginnt",
     "loading": "Wird geladen...",
@@ -187,5 +187,14 @@
     },
     "daysRemaining": "Tage verbleibend",
     "daysPassed": "Tage vergangen",
-    "today": "HEUTE"
+    "holidaysTitle": "Feiertage & Heilige Nächte 2026",
+    "kandilSection": "Heilige Nächte",
+    "holidaySection": "Gesetzliche Feiertage",
+    "kandilAlert": "Erinnerung an die Heilige Nacht",
+    "kandilToday": "Heute ist %{name}! Gesegnete Nacht.",
+    "kandilSoon": "%{days} Tage bis %{name}.",
+    "kandilTomorrow": "Morgen ist %{name}! Bereiten Sie sich vor.",
+    "daysLeft": "Tage übrig",
+    "today": "Heute",
+    "passed": "Vorbei"
 }

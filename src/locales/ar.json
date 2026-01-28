@@ -6,7 +6,7 @@
     "menuDhikr": "المسبحة",
     "menuQibla": "القِبلة",
     "menuSettings": "الإعدادات",
-    "menuHolyDays": "الليالي المباركة والأعياد",
+    "menuHolidays": "الأعياد والليالي المباركة",
     "prayersTitle": "الأدعية",
     "nextEventLabel": "١٨ فبراير ٢٠٢٦ - الوقت المتبقي لبداية رمضان",
     "loading": "جارٍ التحميل...",
@@ -187,5 +187,14 @@
     },
     "daysRemaining": "يوم متبقي",
     "daysPassed": "يوم مضى",
-    "today": "اليوم"
+    "holidaysTitle": "أعياد وليالي مباركة ٢٠٢٦",
+    "kandilSection": "الليالي المباركة",
+    "holidaySection": "العطل الرسمية",
+    "kandilAlert": "تذكير بالليلة المباركة",
+    "kandilToday": "الليلة هي %{name}! ليلة مباركة.",
+    "kandilSoon": "%{days} يوم حتى %{name}.",
+    "kandilTomorrow": "غداً %{name}! استعدوا.",
+    "daysLeft": "يوم متبقي",
+    "today": "اليوم",
+    "passed": "انتهى"
 }

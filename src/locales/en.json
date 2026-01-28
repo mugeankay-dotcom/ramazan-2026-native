@@ -6,7 +6,7 @@
     "menuDhikr": "Dhikr Counter",
     "menuQibla": "Qibla",
     "menuSettings": "Settings",
-    "menuHolyDays": "Holy Days & Holidays",
+    "menuHolidays": "Holidays & Holy Nights",
     "prayersTitle": "Prayers",
     "nextEventLabel": "February 19, 2026 - Time until Ramadan starts",
     "loading": "Loading...",
@@ -187,5 +187,14 @@
     },
     "daysRemaining": "days remaining",
     "daysPassed": "days ago",
-    "today": "TODAY"
+    "holidaysTitle": "2026 Holidays & Holy Nights",
+    "kandilSection": "Holy Nights",
+    "holidaySection": "Public Holidays",
+    "kandilAlert": "Holy Night Reminder",
+    "kandilToday": "Tonight is %{name}! Blessed night.",
+    "kandilSoon": "%{days} days until %{name}.",
+    "kandilTomorrow": "Tomorrow is %{name}! Prepare yourself.",
+    "daysLeft": "days left",
+    "today": "Today",
+    "passed": "Passed"
 }

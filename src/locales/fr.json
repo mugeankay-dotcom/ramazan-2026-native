@@ -6,7 +6,7 @@
     "menuDhikr": "Compteur Dhikr",
     "menuQibla": "Qibla",
     "menuSettings": "Paramètres",
-    "menuHolyDays": "Nuits Sacrées & Fêtes",
+    "menuHolidays": "Fêtes & Nuits Sacrées",
     "prayersTitle": "Prières",
     "nextEventLabel": "19 Février 2026 - Temps restant avant le Ramadan",
     "loading": "Chargement...",
@@ -187,5 +187,14 @@
     },
     "daysRemaining": "jours restants",
     "daysPassed": "jours passés",
-    "today": "AUJOURD'HUI"
+    "holidaysTitle": "Fêtes & Nuits Sacrées 2026",
+    "kandilSection": "Nuits Sacrées",
+    "holidaySection": "Jours Fériés",
+    "kandilAlert": "Rappel de la Nuit Sacrée",
+    "kandilToday": "Ce soir c'est %{name}! Nuit bénie.",
+    "kandilSoon": "%{days} jours avant %{name}.",
+    "kandilTomorrow": "Demain c'est %{name}! Préparez-vous.",
+    "daysLeft": "jours restants",
+    "today": "Aujourd'hui",
+    "passed": "Passé"
 }
