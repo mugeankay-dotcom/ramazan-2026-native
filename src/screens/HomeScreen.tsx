@@ -76,8 +76,9 @@ export default function HomeScreen({ navigation }: any) {
     const [loadingImsakiye, setLoadingImsakiye] = useState(false);
     const [showMenu, setShowMenu] = useState(false);
 
-    // Iftar Warning Modal
-    const [showIftarAlert, setShowIftarAlert] = useState(false);
+    // Prayer Alert Modal - tüm namazlar için
+    const [showPrayerAlert, setShowPrayerAlert] = useState(false);
+    const [currentAlertPrayer, setCurrentAlertPrayer] = useState<{name: string, time: string, isIftar: boolean}>({name: '', time: '', isIftar: false});
 
 
     // Track alerts to avoid double triggering
@@ -560,10 +561,13 @@ export default function HomeScreen({ navigation }: any) {
                     Vibration.vibrate([0, 500, 200, 500]);
                 }
 
-                // 3. Special On-Screen Warning for Iftar - ONLY during Ramadan
-                if (p.isIftar && isRamadan) {
-                    setShowIftarAlert(true);
-                }
+                // 3. Ekran ortasında popup modal - TÜM NAMAZLAR İÇİN
+                setCurrentAlertPrayer({
+                    name: prayerName,
+                    time: timeStr.split(' ')[0],
+                    isIftar: p.isIftar && isRamadan
+                });
+                setShowPrayerAlert(true);
             } else if (diff >= MAX_ALERT_WINDOW && !alreadyTriggered) {
                 // Vakit geçmiş ama triggeredAlerts'a eklenmemiş - ekle ki bir daha kontrol etmesin
                 // Bu sayede ayar değişikliğinde eski vakitler için alert gelmez
@@ -639,8 +643,8 @@ export default function HomeScreen({ navigation }: any) {
                             day: i + 1,
                             date: `${gregorian.day || '?'} ${(gregorian.month?.en || 'UNK').substring(0, 3).toUpperCase()}`,
                             dayName: getDayName(gregorian.weekday?.en || ''),
-                            hijriDay: hijri.day || '?',
-                            hijriYear: hijri.year || '1447',
+                            hijriDay: (i + 1).toString(), // Ramazan 1'den başlar
+                            hijriYear: '1447',
                             imsak: safeParseTime(timings.Imsak),
                             gunes: safeParseTime(timings.Sunrise),
                             ogle: safeParseTime(timings.Dhuhr),
@@ -824,6 +828,10 @@ export default function HomeScreen({ navigation }: any) {
                             <Ionicons name="compass" size={20} color="#fff" />
                             <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('HolyDays')}>
+                            <Ionicons name="calendar" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuHolyDays')}</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Settings')}>
                             <Ionicons name="settings-outline" size={20} color="#fff" />
                             <Text style={styles.menuItemText}>{t('menuSettings')}</Text>
@@ -893,15 +901,22 @@ export default function HomeScreen({ navigation }: any) {
                 </View>
             </Modal>
 
-            {/* IFTAR WARNING MODAL */}
-            <Modal visible={showIftarAlert} transparent animationType="fade" onRequestClose={() => setShowIftarAlert(false)}>
+            {/* EZAN VAKTİ MODAL - TÜM NAMAZLAR İÇİN */}
+            <Modal visible={showPrayerAlert} transparent animationType="fade" onRequestClose={() => setShowPrayerAlert(false)}>
                 <View style={styles.alertOverlay}>
                     <View style={styles.alertContent}>
-                        <Ionicons name="moon" size={60} color={GOLD_COLOR} />
-                        <Text style={styles.alertTitle}>{t('alertTitle', { prayer: t('prayers.Maghrib') })}</Text>
-                        <Text style={styles.alertMessage}>{t('alertBodyIftar')}</Text>
+                        <Ionicons
+                            name={currentAlertPrayer.isIftar ? "moon" : "notifications"}
+                            size={60}
+                            color={GOLD_COLOR}
+                        />
+                        <Text style={styles.alertTime}>{currentAlertPrayer.time}</Text>
+                        <Text style={styles.alertTitle}>{t('alertTitle', { prayer: currentAlertPrayer.name })}</Text>
+                        <Text style={styles.alertMessage}>
+                            {currentAlertPrayer.isIftar ? t('alertBodyIftar') : t('alertBodyPrayer')}
+                        </Text>
 
-                        <TouchableOpacity style={styles.alertBtn} onPress={() => setShowIftarAlert(false)}>
+                        <TouchableOpacity style={styles.alertBtn} onPress={() => setShowPrayerAlert(false)}>
                             <Text style={styles.alertBtnText}>{t('close')}</Text>
                         </TouchableOpacity>
                     </View>
@@ -989,7 +1004,8 @@ const styles = StyleSheet.create({
     // ALERT MODAL
     alertOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.9)', justifyContent: 'center', alignItems: 'center' },
     alertContent: { width: '85%', backgroundColor: '#0a1628', borderRadius: 20, padding: 30, alignItems: 'center', borderWidth: 2, borderColor: GOLD_COLOR },
-    alertTitle: { fontSize: 26, color: GOLD_COLOR, fontFamily: serifBold, marginTop: 15, marginBottom: 10, textTransform: 'uppercase' },
+    alertTime: { fontSize: 48, color: '#fff', fontFamily: serifBold, marginTop: 10 },
+    alertTitle: { fontSize: 22, color: GOLD_COLOR, fontFamily: serifBold, marginTop: 10, marginBottom: 10, textTransform: 'uppercase', textAlign: 'center' },
     alertMessage: { color: '#ccc', textAlign: 'center', fontSize: 16, fontFamily: serifFont, marginBottom: 30, lineHeight: 24 },
     alertBtn: { backgroundColor: GOLD_COLOR, paddingVertical: 12, paddingHorizontal: 40, borderRadius: 30 },
     alertBtnText: { color: '#000', fontSize: 16, fontWeight: 'bold', fontFamily: serifFont },

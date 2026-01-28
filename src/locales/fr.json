@@ -6,6 +6,7 @@
     "menuDhikr": "Compteur Dhikr",
     "menuQibla": "Qibla",
     "menuSettings": "Paramètres",
+    "menuHolyDays": "Nuits Sacrées & Fêtes",
     "prayersTitle": "Prières",
     "nextEventLabel": "19 Février 2026 - Temps restant avant le Ramadan",
     "loading": "Chargement...",
@@ -155,5 +156,36 @@
         "america": "Le calcul ISNA est recommandé pour l'Amérique du Nord.",
         "europe": "Le calcul de la Ligue Islamique Mondiale est recommandé pour l'Europe.",
         "global": "Le calcul de la Ligue Islamique Mondiale (Global) est recommandé pour votre emplacement."
-    }
+    },
+    "holyDaysTitle": "NUITS SACRÉES & FÊTES",
+    "holyDaysSubtitle": "Dates islamiques importantes 2026",
+    "holyDays": {
+        "regaip": "Nuit de Ragaïb",
+        "mirac": "Isra et Miraj",
+        "berat": "Nuit du Mi-Chaabane",
+        "kadir": "Nuit du Destin",
+        "ramadanStart": "Début du Ramadan",
+        "ramadanEnd": "Aïd al-Fitr",
+        "arafat": "Jour d'Arafat",
+        "kurban": "Aïd al-Adha",
+        "mevlid": "Mawlid an-Nabi",
+        "ashura": "Jour d'Achoura",
+        "hijriNewYear": "Nouvel An Islamique"
+    },
+    "holyDayDesc": {
+        "regaip": "Première nuit de vendredi de Rajab. Nuit de miséricorde.",
+        "mirac": "La nuit bénie de l'ascension du Prophète.",
+        "berat": "15e nuit de Chaabane. Nuit du pardon.",
+        "kadir": "Meilleure que mille mois. Nuit de la révélation du Coran.",
+        "ramadanStart": "Début du mois de jeûne.",
+        "ramadanEnd": "Fête marquant la fin du Ramadan (3 jours).",
+        "arafat": "Veille de l'Aïd al-Adha. Les pèlerins se rassemblent à Arafat.",
+        "kurban": "Fête du Sacrifice (4 jours).",
+        "mevlid": "Anniversaire du Prophète Muhammad.",
+        "ashura": "10e jour de Mouharram.",
+        "hijriNewYear": "Début de la nouvelle année islamique."
+    },
+    "daysRemaining": "jours restants",
+    "daysPassed": "jours passés",
+    "today": "AUJOURD'HUI"
 }

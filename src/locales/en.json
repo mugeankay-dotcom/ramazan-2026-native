@@ -6,6 +6,7 @@
     "menuDhikr": "Dhikr Counter",
     "menuQibla": "Qibla",
     "menuSettings": "Settings",
+    "menuHolyDays": "Holy Days & Holidays",
     "prayersTitle": "Prayers",
     "nextEventLabel": "February 19, 2026 - Time until Ramadan starts",
     "loading": "Loading...",
@@ -155,5 +156,36 @@
         "america": "ISNA calculation is recommended for North America.",
         "europe": "Muslim World League calculation is recommended for Europe.",
         "global": "Muslim World League (Global) calculation is recommended for your location."
-    }
+    },
+    "holyDaysTitle": "HOLY DAYS & HOLIDAYS",
+    "holyDaysSubtitle": "2026 Islamic Important Dates",
+    "holyDays": {
+        "regaip": "Ragaib Night",
+        "mirac": "Isra and Mi'raj",
+        "berat": "Mid-Sha'ban Night",
+        "kadir": "Laylat al-Qadr",
+        "ramadanStart": "Ramadan Begins",
+        "ramadanEnd": "Eid al-Fitr",
+        "arafat": "Day of Arafat",
+        "kurban": "Eid al-Adha",
+        "mevlid": "Mawlid an-Nabi",
+        "ashura": "Day of Ashura",
+        "hijriNewYear": "Islamic New Year"
+    },
+    "holyDayDesc": {
+        "regaip": "First Friday night of Rajab. Night of mercy and blessings.",
+        "mirac": "The blessed night when Prophet Muhammad (pbuh) ascended to heavens.",
+        "berat": "15th night of Sha'ban. Night of forgiveness.",
+        "kadir": "Better than a thousand months. Night when Quran began to be revealed.",
+        "ramadanStart": "Beginning of the fasting month.",
+        "ramadanEnd": "Festival marking end of Ramadan fasting (3 days).",
+        "arafat": "Day before Eid al-Adha. Pilgrims gather at Mount Arafat.",
+        "kurban": "Festival of Sacrifice (4 days).",
+        "mevlid": "Birthday of Prophet Muhammad (pbuh).",
+        "ashura": "10th day of Muharram.",
+        "hijriNewYear": "Beginning of new year in Islamic calendar."
+    },
+    "daysRemaining": "days remaining",
+    "daysPassed": "days ago",
+    "today": "TODAY"
 }

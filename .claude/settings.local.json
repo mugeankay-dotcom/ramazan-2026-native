@@ -39,7 +39,10 @@
       "Bash(export JAVA_HOME=\"/c/Program Files/Android/Android Studio/jbr\")",
       "Bash(eas build:list:*)",
       "Bash(dir \"C:\\\\ADB\\\\*.aab\")",
-      "Bash(dir \"C:\\\\ADB\")"
+      "Bash(dir \"C:\\\\ADB\")",
+      "Bash(dir /b /s C:UsersHP.claude-worktrees 2)",
+      "Bash(findstr:*)",
+      "Bash(unzip:*)"
     ]
   }
 }

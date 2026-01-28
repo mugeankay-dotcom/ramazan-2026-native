@@ -6,6 +6,7 @@
     "menuDhikr": "Dhikr-Zähler",
     "menuQibla": "Qibla",
     "menuSettings": "Einstellungen",
+    "menuHolyDays": "Heilige Nächte & Feiertage",
     "prayersTitle": "Gebete",
     "nextEventLabel": "19. Februar 2026 - Zeit bis Ramadan beginnt",
     "loading": "Wird geladen...",
@@ -155,5 +156,36 @@
         "america": "ISNA wird für Nordamerika empfohlen.",
         "europe": "Muslim World League wird für Europa empfohlen.",
         "global": "Muslim World League (Global) wird für Ihren Standort empfohlen."
-    }
+    },
+    "holyDaysTitle": "HEILIGE NÄCHTE & FEIERTAGE",
+    "holyDaysSubtitle": "Islamische wichtige Termine 2026",
+    "holyDays": {
+        "regaip": "Ragaib-Nacht",
+        "mirac": "Isra und Miradsch",
+        "berat": "Barat-Nacht",
+        "kadir": "Lailat al-Qadr",
+        "ramadanStart": "Ramadan-Beginn",
+        "ramadanEnd": "Eid al-Fitr",
+        "arafat": "Arafat-Tag",
+        "kurban": "Eid al-Adha",
+        "mevlid": "Mawlid an-Nabi",
+        "ashura": "Aschura-Tag",
+        "hijriNewYear": "Islamisches Neujahr"
+    },
+    "holyDayDesc": {
+        "regaip": "Erste Freitagnacht des Radschab. Nacht der Barmherzigkeit.",
+        "mirac": "Die gesegnete Nacht der Himmelfahrt des Propheten.",
+        "berat": "15. Nacht des Schaban. Nacht der Vergebung.",
+        "kadir": "Besser als tausend Monate. Nacht der Offenbarung des Korans.",
+        "ramadanStart": "Beginn des Fastenmonats.",
+        "ramadanEnd": "Fest zum Ende des Ramadan (3 Tage).",
+        "arafat": "Tag vor Eid al-Adha. Pilger versammeln sich am Berg Arafat.",
+        "kurban": "Opferfest (4 Tage).",
+        "mevlid": "Geburtstag des Propheten Muhammad.",
+        "ashura": "10. Tag des Muharram.",
+        "hijriNewYear": "Beginn des neuen Jahres im islamischen Kalender."
+    },
+    "daysRemaining": "Tage verbleibend",
+    "daysPassed": "Tage vergangen",
+    "today": "HEUTE"
 }

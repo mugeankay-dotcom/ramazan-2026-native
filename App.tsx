@@ -15,6 +15,7 @@ import DhikrScreen from './src/screens/DhikrScreen';
 import PrayersScreen from './src/screens/PrayersScreen';
 import QiblaScreen from './src/screens/QiblaScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import HolyDaysScreen from './src/screens/HolyDaysScreen';
 import LanguageModal from './src/components/LanguageModal';
 
 SplashScreen.preventAutoHideAsync();
@@ -61,6 +62,7 @@ export default function App() {
               <Stack.Screen name="Dhikr" component={DhikrScreen} />
               <Stack.Screen name="Qibla" component={QiblaScreen} />
               <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="HolyDays" component={HolyDaysScreen} />
             </Stack.Navigator>
             <LanguageModal />
           </NavigationContainer>

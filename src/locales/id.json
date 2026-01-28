@@ -6,6 +6,7 @@
     "menuDhikr": "Penghitung Dzikir",
     "menuQibla": "Kiblat",
     "menuSettings": "Pengaturan",
+    "menuHolyDays": "Malam Suci & Hari Raya",
     "prayersTitle": "Doa-doa",
     "nextEventLabel": "19 Februari 2026 - Waktu hingga Ramadan dimulai",
     "loading": "Memuat...",
@@ -155,5 +156,36 @@
         "america": "Perhitungan ISNA direkomendasikan untuk Amerika Utara.",
         "europe": "Perhitungan Liga Dunia Muslim direkomendasikan untuk Eropa.",
         "global": "Perhitungan Liga Dunia Muslim (Global) direkomendasikan untuk lokasi Anda."
-    }
+    },
+    "holyDaysTitle": "MALAM SUCI & HARI RAYA",
+    "holyDaysSubtitle": "Tanggal Penting Islam 2026",
+    "holyDays": {
+        "regaip": "Malam Ragaib",
+        "mirac": "Isra Mi'raj",
+        "berat": "Malam Nisfu Sya'ban",
+        "kadir": "Lailatul Qadr",
+        "ramadanStart": "Awal Ramadan",
+        "ramadanEnd": "Idul Fitri",
+        "arafat": "Hari Arafah",
+        "kurban": "Idul Adha",
+        "mevlid": "Maulid Nabi",
+        "ashura": "Hari Asyura",
+        "hijriNewYear": "Tahun Baru Islam"
+    },
+    "holyDayDesc": {
+        "regaip": "Malam Jumat pertama bulan Rajab. Malam rahmat.",
+        "mirac": "Malam suci perjalanan Nabi ke langit.",
+        "berat": "Malam ke-15 bulan Sya'ban. Malam pengampunan.",
+        "kadir": "Lebih baik dari seribu bulan. Malam turunnya Al-Quran.",
+        "ramadanStart": "Awal bulan puasa.",
+        "ramadanEnd": "Hari raya akhir Ramadan (3 hari).",
+        "arafat": "Sehari sebelum Idul Adha. Jamaah haji wukuf di Arafah.",
+        "kurban": "Hari Raya Kurban (4 hari).",
+        "mevlid": "Hari lahir Nabi Muhammad SAW.",
+        "ashura": "Hari ke-10 bulan Muharram.",
+        "hijriNewYear": "Awal tahun baru dalam kalender Islam."
+    },
+    "daysRemaining": "hari tersisa",
+    "daysPassed": "hari lalu",
+    "today": "HARI INI"
 }

@@ -6,6 +6,7 @@
     "menuDhikr": "Zikirmatik",
     "menuQibla": "Kıble",
     "menuSettings": "Ayarlar",
+    "menuHolyDays": "Kandiller & Tatiller",
     "prayersTitle": "Dualar",
     "nextEventLabel": "19 Şubat 2026 - Ramazan Başlangıcına Kalan Süre",
     "loading": "Yükleniyor...",
@@ -155,5 +156,36 @@
         "america": "Kuzey Amerika için ISNA hesaplaması önerilir.",
         "europe": "Avrupa için Muslim World League hesaplaması önerilir.",
         "global": "Konumunuz için Muslim World League (Global) hesaplaması önerilir."
-    }
+    },
+    "holyDaysTitle": "KANDİLLER & TATİLLER",
+    "holyDaysSubtitle": "2026 İslami Önemli Günler",
+    "holyDays": {
+        "regaip": "Regaip Kandili",
+        "mirac": "Miraç Kandili",
+        "berat": "Berat Kandili",
+        "kadir": "Kadir Gecesi",
+        "ramadanStart": "Ramazan Başlangıcı",
+        "ramadanEnd": "Ramazan Bayramı",
+        "arafat": "Arefe Günü",
+        "kurban": "Kurban Bayramı",
+        "mevlid": "Mevlid Kandili",
+        "ashura": "Aşure Günü",
+        "hijriNewYear": "Hicri Yılbaşı"
+    },
+    "holyDayDesc": {
+        "regaip": "Recep ayının ilk Cuma gecesi. Rahmet ve bereket gecesi.",
+        "mirac": "Hz. Muhammed'in (s.a.v.) göğe yükseldiği mübarek gece.",
+        "berat": "Şaban ayının 15. gecesi. Günahların affedildiği gece.",
+        "kadir": "Bin aydan hayırlı olan gece. Kur'an'ın indirilmeye başlandığı gece.",
+        "ramadanStart": "Oruç ayının başlangıcı.",
+        "ramadanEnd": "Ramazan orucunun sona erdiği bayram (3 gün).",
+        "arafat": "Kurban Bayramı'ndan bir gün önce. Hacıların Arafat'ta vakfe yaptığı gün.",
+        "kurban": "Kurban kesme ibadeti (4 gün).",
+        "mevlid": "Hz. Muhammed'in (s.a.v.) doğum günü.",
+        "ashura": "Muharrem ayının 10. günü.",
+        "hijriNewYear": "İslami takvimde yeni yılın başlangıcı."
+    },
+    "daysRemaining": "gün kaldı",
+    "daysPassed": "gün önce",
+    "today": "BUGÜN"
 }
