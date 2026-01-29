@@ -33,7 +33,8 @@ export default function SettingsScreen({ navigation }: any) {
         setHighLatitudeMethod,
         midnightMode,
         setMidnightMode,
-        userCity
+        userCity,
+        userLocation
     } = useApp();
 
     const currentLangName = supportedLanguages.find(l => l.code === language)?.name || 'Türkçe';
@@ -90,12 +91,68 @@ export default function SettingsScreen({ navigation }: any) {
     const [showMenu, setShowMenu] = React.useState(false);
     const [showAdvancedSettings, setShowAdvancedSettings] = React.useState(false);
 
-    // Akıllı öneri sistemi - şehir/ülke bazlı
+    // Akıllı öneri sistemi - KOORDİNAT ve şehir bazlı
     const getRecommendation = () => {
         const city = userCity?.toLowerCase() || '';
+        const lat = userLocation?.lat;
+        const lon = userLocation?.lng;
 
+        // ÖNCELİK 1: Koordinat bazlı kontrol (daha güvenilir)
+        // Bu sayede mahalle adı (Cankurtaran) yerine koordinatlardan ülke belirlenir
+        if (lat !== undefined && lon !== undefined) {
+            // Türkiye: lat 36-42, lon 26-45
+            if (lat >= 36 && lat <= 42 && lon >= 26 && lon <= 45) {
+                return { method: '13', school: '0', region: 'turkey', note: t('recommendNote.turkey') };
+            }
+            // Suudi Arabistan: lat 16-32, lon 34-56
+            if (lat >= 16 && lat <= 32 && lon >= 34 && lon <= 56) {
+                return { method: '4', school: '0', region: 'gulf', note: t('recommendNote.gulf') };
+            }
+            // BAE: lat 22-26, lon 51-56
+            if (lat >= 22 && lat <= 26 && lon >= 51 && lon <= 56) {
+                return { method: '8', school: '0', region: 'gulf', note: t('recommendNote.gulf') };
+            }
+            // Mısır: lat 22-32, lon 25-35
+            if (lat >= 22 && lat <= 32 && lon >= 25 && lon <= 35) {
+                return { method: '5', school: '0', region: 'egypt', note: t('recommendNote.egypt') };
+            }
+            // Pakistan: lat 24-37, lon 61-77
+            if (lat >= 24 && lat <= 37 && lon >= 61 && lon <= 77) {
+                return { method: '1', school: '1', region: 'pakistan', note: t('recommendNote.pakistan') };
+            }
+            // Endonezya: lat -11 to 6, lon 95-141
+            if (lat >= -11 && lat <= 6 && lon >= 95 && lon <= 141) {
+                return { method: '20', school: '0', region: 'indonesia', note: t('recommendNote.indonesia') };
+            }
+            // Malezya: lat 1-7, lon 100-119
+            if (lat >= 1 && lat <= 7 && lon >= 100 && lon <= 119) {
+                return { method: '17', school: '0', region: 'malaysia', note: t('recommendNote.malaysia') };
+            }
+            // İran: lat 25-40, lon 44-64
+            if (lat >= 25 && lat <= 40 && lon >= 44 && lon <= 64) {
+                return { method: '7', school: '0', region: 'iran', note: t('recommendNote.iran') };
+            }
+            // Fransa: lat 41-51, lon -5 to 10
+            if (lat >= 41 && lat <= 51 && lon >= -5 && lon <= 10) {
+                return { method: '12', school: '0', region: 'france', note: t('recommendNote.france') };
+            }
+            // Amerika: lat 24-49, lon -125 to -66
+            if (lat >= 24 && lat <= 49 && lon >= -125 && lon <= -66) {
+                return { method: '2', school: '1', region: 'america', note: t('recommendNote.america') };
+            }
+            // Rusya (Avrupa kısmı): lat 45-70, lon 20-60
+            if (lat >= 45 && lat <= 70 && lon >= 20 && lon <= 60) {
+                return { method: '14', school: '1', region: 'russia', note: t('recommendNote.russia') };
+            }
+            // Kuzey Avrupa (yüksek enlem): lat 48-72
+            if (lat >= 48 && lat <= 72 && lon >= -10 && lon <= 40) {
+                return { method: '3', school: '1', region: 'europe', note: t('recommendNote.europe') };
+            }
+        }
+
+        // ÖNCELİK 2: Şehir adı bazlı kontrol (fallback)
         // Türkiye şehirleri
-        const turkishCities = ['istanbul', 'ankara', 'izmir', 'bursa', 'antalya', 'adana', 'konya', 'gaziantep', 'şanlıurfa', 'mersin', 'diyarbakır', 'kayseri', 'eskişehir', 'samsun', 'denizli', 'adapazarı', 'malatya', 'kahramanmaraş', 'van', 'batman', 'elazığ', 'sivas', 'manisa', 'gebze', 'tarsus', 'kocaeli', 'balıkesir', 'erzurum', 'aydın', 'trabzon', 'hatay', 'sakarya', 'kütahya', 'muğla', 'tekirdağ', 'edirne', 'aksaray'];
+        const turkishCities = ['istanbul', 'ankara', 'izmir', 'bursa', 'antalya', 'adana', 'konya', 'gaziantep', 'şanlıurfa', 'mersin', 'diyarbakır', 'kayseri', 'eskişehir', 'samsun', 'denizli', 'adapazarı', 'malatya', 'kahramanmaraş', 'van', 'batman', 'elazığ', 'sivas', 'manisa', 'gebze', 'tarsus', 'kocaeli', 'balıkesir', 'erzurum', 'aydın', 'trabzon', 'hatay', 'sakarya', 'kütahya', 'muğla', 'tekirdağ', 'edirne', 'aksaray', 'türkiye', 'turkey', 'marmara', 'ege', 'akdeniz', 'karadeniz', 'iç anadolu', 'doğu anadolu', 'güneydoğu'];
 
         // Pakistan şehirleri
         const pakistanCities = ['karachi', 'lahore', 'islamabad', 'rawalpindi', 'faisalabad', 'multan', 'peshawar', 'quetta', 'sialkot', 'gujranwala'];
@@ -130,7 +187,7 @@ export default function SettingsScreen({ navigation }: any) {
         // Amerika şehirleri
         const americaCities = ['new york', 'los angeles', 'chicago', 'houston', 'phoenix', 'philadelphia', 'san antonio', 'san diego', 'dallas', 'san jose', 'detroit', 'dearborn'];
 
-        // Öneri belirleme
+        // Öneri belirleme (şehir adı bazlı)
         if (turkishCities.some(c => city.includes(c))) {
             return { method: '13', school: '0', region: 'turkey', note: t('recommendNote.turkey') };
         }

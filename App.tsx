@@ -15,6 +15,7 @@ import DhikrScreen from './src/screens/DhikrScreen';
 import PrayersScreen from './src/screens/PrayersScreen';
 import QiblaScreen from './src/screens/QiblaScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
+import HolidaysScreen from './src/screens/HolidaysScreen';
 import LanguageModal from './src/components/LanguageModal';
 
 SplashScreen.preventAutoHideAsync();
@@ -26,7 +27,7 @@ export default function App() {
     mobileAds()
       .initialize()
       .then(adapterStatuses => {
-
+        console.log('AdMob Initialized', adapterStatuses);
       });
   }, []);
   const [fontsLoaded] = useFonts({
@@ -61,6 +62,7 @@ export default function App() {
               <Stack.Screen name="Dhikr" component={DhikrScreen} />
               <Stack.Screen name="Qibla" component={QiblaScreen} />
               <Stack.Screen name="Settings" component={SettingsScreen} />
+              <Stack.Screen name="Holidays" component={HolidaysScreen} />
             </Stack.Navigator>
             <LanguageModal />
           </NavigationContainer>

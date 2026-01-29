@@ -11,14 +11,11 @@ import { supportedLanguages } from '../utils/i18n';
 import { Colors } from '../theme';
 
 export default function LanguageModal() {
-    const { showLanguageModal, setLanguage, isLoading } = useApp();
+    const { showLanguageModal, setLanguage } = useApp();
 
     const handleSelectLanguage = (code: string) => {
         setLanguage(code);
     };
-
-    // Don't render anything while loading preferences
-    if (isLoading) return null;
 
     return (
         <Modal

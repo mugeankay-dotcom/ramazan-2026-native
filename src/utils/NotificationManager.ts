@@ -5,49 +5,75 @@ import Constants from 'expo-constants';
 // Check if running in Expo Go (where push notifications don't work)
 const isExpoGo = Constants.appOwnership === 'expo';
 
-// Only set notification handler if not in Expo Go
-if (!isExpoGo) {
-    Notifications.setNotificationHandler({
-        handleNotification: async () => ({
+// ALWAYS set notification handler - even in Expo Go for debugging
+// Bu handler uygulama ön plandayken bildirimlerin nasıl gösterileceğini belirler
+Notifications.setNotificationHandler({
+    handleNotification: async () => {
+        console.log('🔔 Notification received while app is in foreground');
+        return {
             shouldShowAlert: true,
             shouldPlaySound: true,
-            shouldSetBadge: false,
-        } as Notifications.NotificationBehavior),
-    });
-}
+            shouldSetBadge: true,
+            priority: Notifications.AndroidNotificationPriority.MAX,
+        };
+    },
+});
 
 export async function registerForPushNotificationsAsync() {
-    // Skip registration in Expo Go
-    if (isExpoGo) {
-        console.log('⚠️ Push notifications not supported in Expo Go. Build a development build to test.');
-        return false;
-    }
+    console.log('🔔 Registering for notifications...');
+    console.log('📱 Platform:', Platform.OS);
+    console.log('📱 Is Expo Go:', isExpoGo);
 
     try {
+        // Android için bildirim kanalı oluştur - ÇOK ÖNEMLİ
         if (Platform.OS === 'android') {
-            await Notifications.setNotificationChannelAsync('prayer-channel', {
-                name: 'Ezan Vakti',
+            const channel = await Notifications.setNotificationChannelAsync('prayer-channel', {
+                name: 'Ezan Vakti Bildirimleri',
+                description: 'Namaz vakti uyarıları',
                 importance: Notifications.AndroidImportance.MAX,
-                vibrationPattern: [0, 250, 250, 250],
-                lightColor: '#FF231F7C',
+                vibrationPattern: [0, 500, 200, 500],
+                lightColor: '#D4AF37',
                 sound: 'default',
+                enableVibrate: true,
+                enableLights: true,
+                lockscreenVisibility: Notifications.AndroidNotificationVisibility.PUBLIC,
+                bypassDnd: false, // Rahatsız etme modunu bypass etme
             });
+            console.log('✅ Android notification channel created:', channel);
         }
 
+        // İzin durumunu kontrol et
         const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        console.log('📋 Existing permission status:', existingStatus);
+
         let finalStatus = existingStatus;
         if (existingStatus !== 'granted') {
-            const { status } = await Notifications.requestPermissionsAsync();
+            console.log('📋 Requesting notification permission...');
+            const { status } = await Notifications.requestPermissionsAsync({
+                ios: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                },
+                android: {
+                    allowAlert: true,
+                    allowBadge: true,
+                    allowSound: true,
+                },
+            });
             finalStatus = status;
+            console.log('📋 New permission status:', finalStatus);
         }
 
         if (finalStatus !== 'granted') {
-            console.log('Notification permission not granted!');
+            console.log('❌ Notification permission NOT granted!');
             return false;
         }
+
+        console.log('✅ Notification permission granted!');
         return true;
     } catch (error) {
-        console.log('Notification setup error:', error);
+        console.log('❌ Notification setup error:', error);
         return false;
     }
 }
@@ -75,9 +101,10 @@ export async function scheduleNotificationAtTime(
     identifier: string,
     playSound: boolean = true
 ) {
+    // Expo Go'da bile log at - debugging için
     if (isExpoGo) {
-        console.log(`[DEV] Would schedule notification: ${title} at ${targetDate.toLocaleTimeString()}`);
-        return null;
+        console.log(`[EXPO GO] Would schedule: ${title} at ${targetDate.toLocaleTimeString()}`);
+        // Expo Go'da gerçek bildirim planlanamaz ama log'layalım
     }
 
     try {
@@ -86,28 +113,34 @@ export async function scheduleNotificationAtTime(
 
         // Don't schedule if time has passed
         if (triggerSeconds <= 0) {
-            console.log(`Skipping past notification: ${title} (${identifier})`);
+            console.log(`⏭️ Skipping past notification: ${title} (${identifier}) - ${Math.abs(triggerSeconds)}s ago`);
             return null;
         }
 
+        // Bildirim planla
         const notificationId = await Notifications.scheduleNotificationAsync({
             content: {
                 title: title,
                 body: body,
-                sound: playSound,
-                data: { type: 'prayer', identifier },
+                sound: playSound ? 'default' : undefined,
+                data: { type: 'prayer', identifier, scheduledFor: targetDate.toISOString() },
+                priority: Notifications.AndroidNotificationPriority.MAX,
+                vibrate: [0, 500, 200, 500],
+                color: '#D4AF37',
             },
             trigger: {
                 seconds: triggerSeconds,
-                channelId: 'prayer-channel'
+                channelId: 'prayer-channel',
             },
             identifier: identifier,
         });
 
-        console.log(`✅ Scheduled: ${identifier} at ${targetDate.toLocaleTimeString()} (${triggerSeconds}s) sound:${playSound}`);
+        const hours = Math.floor(triggerSeconds / 3600);
+        const mins = Math.floor((triggerSeconds % 3600) / 60);
+        console.log(`✅ Scheduled: ${identifier} at ${targetDate.toLocaleTimeString()} (in ${hours}h ${mins}m) sound:${playSound}`);
         return notificationId;
     } catch (error) {
-        console.log('Schedule notification error:', error);
+        console.log('❌ Schedule notification error:', error);
         return null;
     }
 }
@@ -139,9 +172,14 @@ export async function scheduleDailyPrayerNotifications(
     isRamadan: boolean = false,  // Ramazan kontrolü
     soundEnabled: boolean = true  // Ses kontrolü
 ) {
+    console.log('🕌 ========== SCHEDULING DAILY PRAYER NOTIFICATIONS ==========');
+    console.log('🕌 Prayer times received:', JSON.stringify(prayerTimes, null, 2));
+    console.log('🕌 Is Ramadan:', isRamadan);
+    console.log('🕌 Sound enabled:', soundEnabled);
+
+    // Expo Go'da gerçek bildirim çalışmaz ama log'la
     if (isExpoGo) {
-        console.log('[DEV] Would schedule daily prayer notifications');
-        return;
+        console.log('⚠️ [EXPO GO] Notifications won\'t actually work - use production build');
     }
 
     // Cancel existing notifications first to avoid duplicates
@@ -149,6 +187,7 @@ export async function scheduleDailyPrayerNotifications(
 
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
+    console.log('📅 Today:', todayStr);
 
     const parseTime = (timeStr: string | undefined): Date | null => {
         if (!timeStr) return null;
@@ -221,13 +260,20 @@ export async function scheduleDailyPrayerNotifications(
     ];
 
     let scheduledCount = 0;
+    const scheduledPrayers: string[] = [];
+    const skippedPrayers: string[] = [];
 
     for (const prayer of prayers) {
         const prayerTime = parseTime(prayer.time);
-        if (!prayerTime) continue;
+        if (!prayerTime) {
+            console.log(`⚠️ No time for ${prayer.id}`);
+            continue;
+        }
 
         const identifier = `${todayStr}-${prayer.id}`;
         const title = translations.alertTitle(prayer.name);
+
+        console.log(`🕐 Processing ${prayer.id}: ${prayer.time} -> ${prayerTime.toLocaleTimeString()}`);
 
         const result = await scheduleNotificationAtTime(
             title,
@@ -239,9 +285,17 @@ export async function scheduleDailyPrayerNotifications(
 
         if (result) {
             scheduledCount++;
+            scheduledPrayers.push(`${prayer.id} (${prayer.time})`);
+        } else {
+            skippedPrayers.push(`${prayer.id} (${prayer.time})`);
         }
     }
 
+    console.log('🕌 ========== NOTIFICATION SCHEDULING COMPLETE ==========');
+    console.log(`✅ Scheduled ${scheduledCount} notifications:`, scheduledPrayers.join(', ') || 'none');
+    if (skippedPrayers.length > 0) {
+        console.log(`⏭️ Skipped (past times):`, skippedPrayers.join(', '));
+    }
 
     return scheduledCount;
 }
@@ -269,9 +323,11 @@ export async function schedulePrayerNotification(title: string, body: string, tr
 }
 
 export async function sendImmediateNotification(title: string, body: string, playSound: boolean = true) {
+    console.log(`🔔 Sending immediate notification: ${title}`);
+
+    // Expo Go'da bile deneyelim - log'a düşer en azından
     if (isExpoGo) {
-        console.log(`[DEV] Would send notification: ${title} - ${body}`);
-        return;
+        console.log(`[EXPO GO] Would send: ${title} - ${body}`);
     }
 
     try {

@@ -3,9 +3,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { PrayerTimesWidget } from './PrayerTimesWidget';
 
-// Ramazan 2026 başlangıç tarihi
+// Ramazan 2026: 1 Ramazan = 19 Şubat (ilk oruç), Bayram = 20 Mart
 const RAMADAN_START = new Date('2026-02-19T00:00:00');
-const RAMADAN_END = new Date('2026-03-21T00:00:00');
+const RAMADAN_END = new Date('2026-03-20T00:00:00'); // 29 gün oruç, bayram 20 Mart
 
 // Namaz adları
 const PRAYER_NAMES: Record<string, string> = {
