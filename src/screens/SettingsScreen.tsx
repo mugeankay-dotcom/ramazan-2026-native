@@ -535,6 +535,10 @@ export default function SettingsScreen({ navigation }: any) {
                             <Ionicons name="compass" size={20} color="#fff" />
                             <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Holidays')}>
+                            <Ionicons name="calendar" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuHolidays')}</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Settings')}>
                             <Ionicons name="settings" size={20} color={Colors.primary} />
                             <Text style={[styles.menuItemText, { color: Colors.primary, fontWeight: 'bold' }]}>{t('menuSettings')}</Text>

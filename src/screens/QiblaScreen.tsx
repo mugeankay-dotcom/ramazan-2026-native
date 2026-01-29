@@ -108,8 +108,12 @@ export default function QiblaScreen({ navigation }: any) {
                             <Text style={styles.menuItemText}>{t('menuDhikr')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Qibla')}>
-                            <Ionicons name="compass" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
+                            <Ionicons name="compass" size={20} color={Colors.primary} />
+                            <Text style={[styles.menuItemText, { color: Colors.primary, fontWeight: 'bold' }]}>{t('menuQibla')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Holidays')}>
+                            <Ionicons name="calendar" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuHolidays')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Settings')}>
                             <Ionicons name="settings" size={20} color="#fff" />

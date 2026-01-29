@@ -210,20 +210,24 @@ export default function PrayersScreen({ navigation }: any) {
                             <Text style={styles.menuItemText}>{t('menuHome')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Prayers')}>
-                            <Ionicons name="book" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>Dualar</Text>
+                            <Ionicons name="book" size={20} color={GOLD_COLOR} />
+                            <Text style={[styles.menuItemText, { color: GOLD_COLOR, fontWeight: 'bold' }]}>{t('menuPrayers')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Dhikr')}>
                             <Ionicons name="radio-button-on" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>Zikirmatik</Text>
+                            <Text style={styles.menuItemText}>{t('menuDhikr')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Qibla')}>
                             <Ionicons name="compass" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>Kıble</Text>
+                            <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Holidays')}>
+                            <Ionicons name="calendar" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuHolidays')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.menuItem} onPress={() => navigateTo('Settings')}>
                             <Ionicons name="settings" size={20} color="#fff" />
-                            <Text style={styles.menuItemText}>Ayarlar</Text>
+                            <Text style={styles.menuItemText}>{t('menuSettings')}</Text>
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={styles.menuCloseArea} onPress={() => setShowMenu(false)} />
