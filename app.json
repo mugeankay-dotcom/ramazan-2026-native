@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ramazan 2026",
     "slug": "ramazan2026",
-    "version": "1.5.0",
+    "version": "1.7.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -27,7 +27,7 @@
         "backgroundColor": "#0f2027"
       },
       "package": "com.ramazan.vakti",
-      "versionCode": 18,
+      "versionCode": 20,
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",

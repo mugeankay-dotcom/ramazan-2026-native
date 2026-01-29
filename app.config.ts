@@ -21,7 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     ...config,
     name: 'Ramazan 2026',
     slug: 'ramazan2026',
-    version: '1.3.2',
+    version: '1.7.0',
     orientation: 'portrait',
     icon: './assets/icon.png',
     userInterfaceStyle: 'dark',
@@ -45,7 +45,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
             backgroundColor: '#0f2027',
         },
         package: 'com.ramazan.vakti',
-        versionCode: 17,
+        versionCode: 20,
         permissions: [
             'android.permission.INTERNET',
             'android.permission.ACCESS_NETWORK_STATE',
