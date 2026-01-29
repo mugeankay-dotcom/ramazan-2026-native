@@ -11,10 +11,15 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { useApp } from '../context/AppContext';
 import { t, supportedLanguages } from '../utils/i18n';
 import { Colors } from '../theme';
 import AdBanner from '../components/AdBanner';
+
+// Dinamik versiyon bilgisi
+const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
+const BUILD_NUMBER = Constants.expoConfig?.android?.versionCode || 1;
 
 export default function SettingsScreen({ navigation }: any) {
     const insets = useSafeAreaInsets();
@@ -462,7 +467,7 @@ export default function SettingsScreen({ navigation }: any) {
                 </View>
 
                 {/* Version */}
-                <Text style={styles.version}>Ramazan 2026 v1.4.1 (Build 18)</Text>
+                <Text style={styles.version}>Ramazan 2026 v{APP_VERSION} (Build {BUILD_NUMBER})</Text>
             </ScrollView>
 
             {/* Calculation Method Modal */}
