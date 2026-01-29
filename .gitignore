@@ -31,6 +31,16 @@ GoogleService-Info.plist
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+debug_*.json
+debug_*.py
+*.debug.json
+
+# Secrets & Keys (CRITICAL - Never commit!)
+*.secret
+*.secrets
+.env
+.env.*
+secrets/
 
 # macOS
 .DS_Store
