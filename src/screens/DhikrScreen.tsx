@@ -95,7 +95,9 @@ export default function DhikrScreen({ navigation }: any) {
                         <Ionicons name="menu" size={28} color="#fff" />
                     </TouchableOpacity>
                     <Text style={styles.title}>{t('dhikrTitle')}</Text>
-                    <View style={{ width: 28 }} />
+                    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                        <Ionicons name="home" size={24} color="#fff" />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.content}>

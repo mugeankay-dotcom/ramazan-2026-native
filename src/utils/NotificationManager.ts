@@ -191,7 +191,9 @@ export async function scheduleDailyPrayerNotifications(
 
     const parseTime = (timeStr: string | undefined): Date | null => {
         if (!timeStr) return null;
-        const [h, m] = timeStr.split(':').map(Number);
+        // Aladhan API bazen "05:30 (EET)" formatında dönebiliyor, parantezli kısmı temizle
+        const cleanTime = timeStr.split(' ')[0];
+        const [h, m] = cleanTime.split(':').map(Number);
         const d = new Date();
         d.setHours(h, m, 0, 0);
         return d;

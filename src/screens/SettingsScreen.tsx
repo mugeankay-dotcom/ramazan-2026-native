@@ -278,7 +278,9 @@ export default function SettingsScreen({ navigation }: any) {
                     <Ionicons name="menu" size={28} color="#fff" />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{t('settingsTitle')}</Text>
-                <View style={{ width: 28 }} />
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name="home" size={24} color="#fff" />
+                </TouchableOpacity>
             </View>
 
             <ScrollView contentContainerStyle={[styles.content]}>

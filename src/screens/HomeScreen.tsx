@@ -78,7 +78,7 @@ export default function HomeScreen({ navigation }: any) {
 
     // Prayer Alert Modal - tüm namazlar için
     const [showPrayerAlert, setShowPrayerAlert] = useState(false);
-    const [currentAlertPrayer, setCurrentAlertPrayer] = useState<{name: string, time: string, isIftar: boolean, isSahur: boolean}>({name: '', time: '', isIftar: false, isSahur: false});
+    const [currentAlertPrayer, setCurrentAlertPrayer] = useState<{ name: string, time: string, isIftar: boolean, isSahur: boolean }>({ name: '', time: '', isIftar: false, isSahur: false });
 
 
     // Track alerts to avoid double triggering
@@ -118,13 +118,11 @@ export default function HomeScreen({ navigation }: any) {
             const timeStr = todayPrayers[prayerId];
             if (!timeStr) return;
 
-            const [h, m] = timeStr.split(':').map(Number);
-            const prayerTime = new Date();
-            prayerTime.setHours(h, m, 0, 0);
+            const time = parseTime(timeStr);
 
-            // Eğer vakit geçmişse (60 saniyeden fazla), triggeredAlerts'a ekle
-            const diff = now.getTime() - prayerTime.getTime();
-            if (diff > 60000) { // 60 saniyeden fazla geçmiş
+            // Eğer vakit geçmişse (hatta 1 saniye bile olsa), triggeredAlerts'a ekle
+            // Bu sayede uygulama/widget açıldığında geçmiş vakitler için alert tetiklenmez
+            if (now > time) {
                 const alertKey = `${todayKey}-${prayerId}`;
                 triggeredAlerts.current.add(alertKey);
             }
@@ -537,7 +535,9 @@ export default function HomeScreen({ navigation }: any) {
     };
 
     const parseTime = (timeStr: string): Date => {
-        const [h, m] = timeStr.split(':').map(Number);
+        // Aladhan API bazen "05:30 (EET)" formatında dönebiliyor, parantezli kısmı temizle
+        const cleanTime = timeStr.split(' ')[0];
+        const [h, m] = cleanTime.split(':').map(Number);
         const d = new Date();
         d.setHours(h, m, 0, 0);
         return d;
@@ -654,7 +654,7 @@ export default function HomeScreen({ navigation }: any) {
             try {
                 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
                 baseParams.append('timezonestring', timezone);
-            } catch (e) {}
+            } catch (e) { }
 
             const apiUrl = `${API_URL}/2026/2?${baseParams.toString()}`;
             const apiUrlMar = `${API_URL}/2026/3?${baseParams.toString()}`;

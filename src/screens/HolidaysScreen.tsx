@@ -16,6 +16,9 @@ import {
     getHolidays,
     isTodayKandil,
 } from '../data/holidays2026';
+import AdBanner from '../components/AdBanner';
+import { Colors } from '../theme';
+import { Modal } from 'react-native';
 
 const GOLD_COLOR = '#D4AF37';
 const BG_COLOR = '#0a1628';
@@ -25,6 +28,8 @@ export default function HolidaysScreen({ navigation }: any) {
     const { language, userCity } = useApp();
     const countryCode = getCountryCode(userCity || 'Turkey');
     const holidays = getHolidays(countryCode);
+
+    const [showMenu, setShowMenu] = useState(false);
 
     // Bugün kandil mi kontrol et
     const { isKandil, kandil: todayKandil } = isTodayKandil();
@@ -77,11 +82,13 @@ export default function HolidaysScreen({ navigation }: any) {
         <View style={[styles.container, { paddingTop: insets.top }]}>
             {/* Header */}
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-                    <Ionicons name="arrow-back" size={24} color={GOLD_COLOR} />
+                <TouchableOpacity onPress={() => setShowMenu(true)}>
+                    <Ionicons name="menu" size={28} color={GOLD_COLOR} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>{t('holidaysTitle')}</Text>
-                <View style={{ width: 40 }} />
+                <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name="home" size={24} color={GOLD_COLOR} />
+                </TouchableOpacity>
             </View>
 
             {/* Location Badge */}
@@ -162,52 +169,93 @@ export default function HolidaysScreen({ navigation }: any) {
                     </View>
 
                     {holidays.map((holiday, index) => {
-                            const { status, daysLeft } = getStatus(holiday.date);
+                        const { status, daysLeft } = getStatus(holiday.date);
 
-                            return (
-                                <View
-                                    key={index}
-                                    style={[
-                                        styles.holidayCard,
-                                        status === 'today' && styles.cardToday,
-                                        status === 'passed' && styles.cardPassed
-                                    ]}
-                                >
-                                    <View style={styles.holidayLeft}>
-                                        <Text style={[styles.holidayDate, status === 'passed' && styles.textPassed]}>
-                                            {formatDate(holiday.date)}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.holidayMiddle}>
-                                        <Text style={[styles.holidayName, status === 'passed' && styles.textPassed]}>
-                                            {holiday.localName}
-                                        </Text>
-                                        {holiday.name !== holiday.localName && (
-                                            <Text style={[styles.holidayNameEn, status === 'passed' && styles.textPassed]}>
-                                                {holiday.name}
-                                            </Text>
-                                        )}
-                                    </View>
-                                    <View style={styles.cardRight}>
-                                        {status === 'today' ? (
-                                            <View style={styles.todayBadge}>
-                                                <Text style={styles.todayText}>{t('today')}</Text>
-                                            </View>
-                                        ) : status === 'passed' ? (
-                                            <Text style={styles.passedText}>{t('passed')}</Text>
-                                        ) : (
-                                            <Text style={styles.daysLeftText}>
-                                                {daysLeft} {t('daysLeft')}
-                                            </Text>
-                                        )}
-                                    </View>
+                        return (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.holidayCard,
+                                    status === 'today' && styles.cardToday,
+                                    status === 'passed' && styles.cardPassed
+                                ]}
+                            >
+                                <View style={styles.holidayLeft}>
+                                    <Text style={[styles.holidayDate, status === 'passed' && styles.textPassed]}>
+                                        {formatDate(holiday.date)}
+                                    </Text>
                                 </View>
-                            );
-                        })}
+                                <View style={styles.holidayMiddle}>
+                                    <Text style={[styles.holidayName, status === 'passed' && styles.textPassed]}>
+                                        {holiday.localName}
+                                    </Text>
+                                    {holiday.name !== holiday.localName && (
+                                        <Text style={[styles.holidayNameEn, status === 'passed' && styles.textPassed]}>
+                                            {holiday.name}
+                                        </Text>
+                                    )}
+                                </View>
+                                <View style={styles.cardRight}>
+                                    {status === 'today' ? (
+                                        <View style={styles.todayBadge}>
+                                            <Text style={styles.todayText}>{t('today')}</Text>
+                                        </View>
+                                    ) : status === 'passed' ? (
+                                        <Text style={styles.passedText}>{t('passed')}</Text>
+                                    ) : (
+                                        <Text style={styles.daysLeftText}>
+                                            {daysLeft} {t('daysLeft')}
+                                        </Text>
+                                    )}
+                                </View>
+                            </View>
+                        );
+                    })}
                 </View>
 
-                <View style={{ height: 40 }} />
+                <View style={{ height: 100 }} />
             </ScrollView>
+
+            {/* Menu Modal */}
+            <Modal visible={showMenu} transparent animationType="fade" onRequestClose={() => setShowMenu(false)}>
+                <View style={styles.menuOverlay}>
+                    <View style={[styles.menuContent, { paddingTop: insets.top + 20 }]}>
+                        <View style={styles.menuHeader}>
+                            <Text style={styles.menuTitle}>{t('menuTitle')}</Text>
+                            <TouchableOpacity onPress={() => setShowMenu(false)}>
+                                <Ionicons name="close-circle-outline" size={28} color={GOLD_COLOR} />
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Home'); }}>
+                            <Ionicons name="home" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuHome')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Prayers'); }}>
+                            <Ionicons name="book" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuPrayers')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Dhikr'); }}>
+                            <Ionicons name="radio-button-on" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuDhikr')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Qibla'); }}>
+                            <Ionicons name="compass" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuQibla')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Holidays'); }}>
+                            <Ionicons name="calendar" size={20} color={GOLD_COLOR} />
+                            <Text style={[styles.menuItemText, { color: GOLD_COLOR, fontWeight: 'bold' }]}>{t('menuHolidays')}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.menuItem} onPress={() => { setShowMenu(false); navigation.navigate('Settings'); }}>
+                            <Ionicons name="settings" size={20} color="#fff" />
+                            <Text style={styles.menuItemText}>{t('menuSettings')}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.menuCloseArea} onPress={() => setShowMenu(false)} />
+                </View>
+            </Modal>
+
+            <AdBanner position="bottom" />
         </View>
     );
 }
@@ -388,4 +436,12 @@ const styles = StyleSheet.create({
         color: GOLD_COLOR,
         textAlign: 'center',
     },
+    // Menu
+    menuOverlay: { flex: 1, flexDirection: 'row' },
+    menuContent: { width: '75%', backgroundColor: 'rgba(15, 25, 35, 0.98)', paddingHorizontal: 20 },
+    menuCloseArea: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
+    menuHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 30, borderBottomWidth: 1, borderBottomColor: '#333', paddingBottom: 15 },
+    menuTitle: { fontSize: 22, color: GOLD_COLOR, fontWeight: 'bold' },
+    menuItem: { flexDirection: 'row', alignItems: 'center', gap: 15, paddingVertical: 18, borderBottomWidth: 1, borderBottomColor: '#222' },
+    menuItemText: { fontSize: 16, color: '#fff' },
 });

@@ -105,7 +105,9 @@ export default function PrayersScreen({ navigation }: any) {
                         <Ionicons name="menu" size={32} color={GOLD_COLOR} />
                     </TouchableOpacity>
                     <Text style={styles.headerTitle}>{t('prayersTitle')}</Text>
-                    <View style={{ width: 32 }} />
+                    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                        <Ionicons name="home" size={28} color={GOLD_COLOR} />
+                    </TouchableOpacity>
                 </View>
 
                 <ScrollView contentContainerStyle={styles.content}>

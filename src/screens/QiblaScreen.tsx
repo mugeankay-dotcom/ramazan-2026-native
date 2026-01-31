@@ -42,6 +42,9 @@ export default function QiblaScreen({ navigation }: any) {
                     <TouchableOpacity onPress={() => setShowMenu(true)}>
                         <Ionicons name="menu" size={28} color="#fff" />
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+                        <Ionicons name="home" size={24} color="#fff" />
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.content}>
