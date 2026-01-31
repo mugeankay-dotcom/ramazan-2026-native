@@ -18,7 +18,6 @@ const widgetConfig: WithAndroidWidgetsParams = {
 };
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
-    ...config,
     name: 'Ramazan 2026',
     slug: 'ramazan2026',
     version: '1.7.1',
